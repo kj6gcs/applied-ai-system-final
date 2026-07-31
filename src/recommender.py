@@ -82,6 +82,12 @@ class Recommender:
         _score, reasons = score_song(user_prefs, asdict(song))
         return ", ".join(reasons) if reasons else "No matching attributes for this song."
 
+    def score(self, user: UserProfile, song: Song) -> float:
+        """Returns the numeric score score_song() already computes internally."""
+        user_prefs = _user_profile_to_prefs(user)
+        score, _reasons = score_song(user_prefs, asdict(song))
+        return score
+
 def load_songs(csv_path: str) -> List[Dict]:
     """Reads songs.csv into a list of dicts, converting numeric fields to float/int."""
     logger.debug("Loading songs from %s...", csv_path)

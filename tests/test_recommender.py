@@ -5,6 +5,8 @@ Song/UserProfile/Recommender are a dataclass-friendly wrapper around the
 same score_song/recommend_songs logic that src/main.py calls directly
 through dicts -- there is one recommendation engine, not two.
 """
+from dataclasses import asdict
+
 from src.recommender import (
     Song,
     UserProfile,
@@ -12,6 +14,7 @@ from src.recommender import (
     load_songs,
     score_song,
     recommend_songs,
+    _user_profile_to_prefs,
 )
 
 
@@ -333,6 +336,47 @@ def test_explain_recommendation_reflects_actual_score_breakdown():
     assert isinstance(explanation, str)
     assert "genre match" in explanation
     assert "mood match" in explanation
+
+
+def test_recommender_score_matches_score_song_for_the_same_inputs():
+    user = UserProfile(
+        favorite_genre="pop",
+        favorite_mood="happy",
+        target_tempo=120,
+        target_valence=0.9,
+        target_danceability=0.8,
+        likes_acoustic=False,
+        target_decade=2020,
+        target_mood_tag="joy",
+        prefers_mainstream_hits=True,
+    )
+    rec = make_small_recommender()
+    pop_song = next(song for song in rec.songs if song.title == "Test Pop Track")
+
+    wrapper_score = rec.score(user, pop_song)
+    expected_score, _reasons = score_song(_user_profile_to_prefs(user), asdict(pop_song))
+
+    assert wrapper_score == expected_score
+
+
+def test_recommender_score_is_consistent_with_recommend_ordering():
+    user = UserProfile(
+        favorite_genre="pop",
+        favorite_mood="happy",
+        target_tempo=120,
+        target_valence=0.9,
+        target_danceability=0.8,
+        likes_acoustic=False,
+        target_decade=2020,
+        target_mood_tag="joy",
+        prefers_mainstream_hits=True,
+    )
+    rec = make_small_recommender()
+
+    ranked_songs = rec.recommend(user, k=2)
+    scores = [rec.score(user, song) for song in ranked_songs]
+
+    assert scores == sorted(scores, reverse=True)
 
 
 def test_explain_recommendation_handles_no_matching_attributes():
