@@ -4,6 +4,32 @@
 
 ### Applied AI Final Project
 
+## [2.0.0-alpha.4] - 2026-07-31
+
+### Added
+
+- Introduced a two-stage Streamlit interface consisting of listener profile setup and a continuous listening session.
+- Added quick-start listening presets alongside a fully customizable profile builder.
+- Added `song_selection.py` to provide weighted candidate selection while preserving the existing recommendation engine.
+- Added repeat avoidance using a rolling history of recently recommended songs.
+- Added listener-friendly recommendation explanations with technical scoring details available through an expandable panel.
+- Added real-time recommendation cycle tracking, including feedback progress toward profile adaptation.
+- Added preference drift notifications describing how listener feedback influenced future recommendations.
+- Added comprehensive Streamlit UI tests and song selection tests.
+
+### Changed
+
+- Redesigned the application from an engineering demonstration into an interactive music recommendation experience.
+- Recommendations are now presented one song at a time instead of as a static ranked list.
+- User feedback now advances the listening session while allowing the ResonanceAgent to continuously refine the active listener profile.
+- Moved raw profile data, technical history, and diagnostic information into an Advanced AI Details panel to improve usability while preserving transparency.
+
+### Verified
+
+- All 54 automated tests pass successfully.
+- Streamlit interface verified through automated AppTest testing and manual execution.
+- Existing CLI behavior and deterministic recommendation engine remain unchanged.
+
 ## [2.0.0-alpha.3] - 2026-07-31
 
 ### Added
