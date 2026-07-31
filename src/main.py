@@ -11,6 +11,7 @@ You will implement the functions in recommender.py:
 
 from tabulate import tabulate
 
+from src.logging_config import configure_logging
 from src.recommender import load_songs, recommend_songs
 
 # Candidate personas from the Phase 2 design step (see README.md), saved here
@@ -103,6 +104,7 @@ def print_recommendations(profile_name: str, user_prefs: dict, songs: list) -> N
 
 
 def main() -> None:
+    configure_logging()
     songs = load_songs("data/songs.csv")
     print()
 

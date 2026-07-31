@@ -1,6 +1,9 @@
 import csv
+import logging
 from typing import List, Dict, Tuple, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
+
+logger = logging.getLogger(__name__)
 
 @dataclass
 class Song:
@@ -39,25 +42,49 @@ class UserProfile:
     target_mood_tag: str
     prefers_mainstream_hits: bool
 
+def _user_profile_to_prefs(user: UserProfile) -> Dict:
+    """
+    Maps UserProfile's target_-prefixed field names to the keys score_song()
+    expects, which mirror the Song field names instead (see ai_interactions.md
+    for why this convention was chosen: tempo_bpm/valence/danceability/etc.,
+    not target_tempo/target_valence/...).
+    """
+    return {
+        "genre": user.favorite_genre,
+        "mood": user.favorite_mood,
+        "tempo_bpm": user.target_tempo,
+        "valence": user.target_valence,
+        "danceability": user.target_danceability,
+        "likes_acoustic": user.likes_acoustic,
+        "release_decade": user.target_decade,
+        "mood_tag": user.target_mood_tag,
+        "prefers_mainstream_hits": user.prefers_mainstream_hits,
+    }
+
+
 class Recommender:
     """
-    OOP implementation of the recommendation logic.
+    Dataclass-friendly wrapper around the score_song/recommend_songs engine.
     Required by tests/test_recommender.py
     """
     def __init__(self, songs: List[Song]):
         self.songs = songs
 
     def recommend(self, user: UserProfile, k: int = 5) -> List[Song]:
-        # TODO: Implement recommendation logic
-        return self.songs[:k]
+        user_prefs = _user_profile_to_prefs(user)
+        song_dicts = [asdict(song) for song in self.songs]
+        ranked = recommend_songs(user_prefs, song_dicts, k=k)
+        songs_by_id = {song.id: song for song in self.songs}
+        return [songs_by_id[song_dict["id"]] for song_dict, _score, _explanation in ranked]
 
     def explain_recommendation(self, user: UserProfile, song: Song) -> str:
-        # TODO: Implement explanation logic
-        return "Explanation placeholder"
+        user_prefs = _user_profile_to_prefs(user)
+        _score, reasons = score_song(user_prefs, asdict(song))
+        return ", ".join(reasons) if reasons else "No matching attributes for this song."
 
 def load_songs(csv_path: str) -> List[Dict]:
     """Reads songs.csv into a list of dicts, converting numeric fields to float/int."""
-    print(f"Loading songs from {csv_path}...")
+    logger.debug("Loading songs from %s...", csv_path)
     songs = []
     with open(csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -78,7 +105,7 @@ def load_songs(csv_path: str) -> List[Dict]:
                 "billboard_peak_at_release": int(row["billboard_peak_at_release"]) if row["billboard_peak_at_release"] else None,
                 "billboard_peak_overall": int(row["billboard_peak_overall"]) if row["billboard_peak_overall"] else None,
             })
-    print(f"Loaded songs: {len(songs)}")
+    logger.info("Loaded %d songs from %s", len(songs), csv_path)
     return songs
 
 def normalize_tempo(tempo_bpm: float, min_bpm: float = 40.0, max_bpm: float = 200.0) -> float:

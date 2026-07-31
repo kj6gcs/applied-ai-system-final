@@ -4,6 +4,46 @@
 
 ### Applied AI Final Project
 
+## [2.0.1-dev] - In Development
+
+### Changed
+
+- Refactored the recommendation engine to eliminate duplicate implementations while preserving the validated scoring algorithm.
+- Unified the object-oriented API with the existing recommendation logic, creating a single recommendation engine used throughout the application.
+- Replaced diagnostic `print()` statements with structured logging to improve maintainability and debugging.
+- Expanded the automated test suite from 2 to 19 tests, including regression tests based on documented recommendation outputs.
+- Added regression testing to verify recommendation behavior remains consistent during future development.
+- Improved project architecture in preparation for adaptive recommendation features planned for Resonance v2.0.
+
+### Verified
+
+- Existing recommendation scores, rankings, and explanations remain unchanged following the Phase 1 refactor.
+- Command-line interface behavior remains fully compatible with Resonance v1.0.
+- All automated tests pass successfully.
+
+### Next
+
+- Design and implement the Resonance Agent.
+- Add adaptive listener behavior (likes, skips, and replay events).
+- Introduce recommendation explainability, confidence scoring, and reliability evaluation.
+- Develop the Streamlit user interface.
+
+## [2.0.0] - 2026-07-31
+
+### Changed
+
+- Forked Resonance v1.0 into a dedicated final-project repository to preserve the original implementation while enabling iterative development.
+- Reorganized project assets to align with AI-110 final project requirements, including a dedicated `diagrams/` directory for Mermaid architecture diagrams.
+- Updated project configuration and dependencies, including correcting package requirements and improving virtual environment exclusions in `.gitignore`.
+- Began redesigning Resonance as an adaptive AI system centered around an agentic workflow rather than a static recommendation engine.
+
+### Planned
+
+- Implement a behavioral recommendation agent that adapts user preferences based on simulated listening behavior (likes, skips, and replays).
+- Introduce recommendation diversity reranking to reduce artist and genre repetition.
+- Add explainable recommendation reasoning, confidence scoring, logging, guardrails, and automated evaluation.
+- Expand documentation, architecture diagrams, and model card to reflect the redesigned system.
+
 ### Added
 
 - Adaptive listener-feedback agent
