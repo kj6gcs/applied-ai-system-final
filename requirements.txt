@@ -1,4 +1,4 @@
-pandas
+pip
 pytest
 streamlit
 tabulate

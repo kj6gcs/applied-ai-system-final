@@ -1,15 +1,33 @@
 # Change Log
 
+## Resonance v2.0
+
+### Applied AI Final Project
+
+### Added
+
+- Adaptive listener-feedback agent
+- Like, skip, and replay behavior tracking
+- Preference-profile updates
+- Recommendation reliability evaluation
+- Expanded diversity reranking
+- Streamlit user interface
+- Structured logging and guardrails
+
+## Resonance v1.0
+
+### Original starter project
+
 ### Substantial Changes to Starter Code
 
 ## 07-09-2026
 
-- Removed the "energy" feature entirely. It didn't really make sense as something a song permanently *has* — it's more about how the listener feels in the moment than a fixed trait of the song. Tempo took its place as the main "intensity" signal instead. Updated the data file, the code, and the tests to match.
+- Removed the "energy" feature entirely. It didn't really make sense as something a song permanently _has_ — it's more about how the listener feels in the moment than a fixed trait of the song. Tempo took its place as the main "intensity" signal instead. Updated the data file, the code, and the tests to match.
   - Left `README.md` and `model_card.md`'s original wording alone on purpose, to keep the assignment's original grading text intact.
 
 ## 07-14-2026
 
-- Wrote up how the recommender actually works in the README: explained the difference between content-based recommendations (what this project does) and the "other users liked this too" style (which it doesn't do), and settled on the final scoring weights — a genre match is worth more than a mood match, and tempo is scored by how *close* it is to what the listener wants, not just "faster is better." Also listed out exactly what info each song and each listener profile keeps track of.
+- Wrote up how the recommender actually works in the README: explained the difference between content-based recommendations (what this project does) and the "other users liked this too" style (which it doesn't do), and settled on the final scoring weights — a genre match is worth more than a mood match, and tempo is scored by how _close_ it is to what the listener wants, not just "faster is better." Also listed out exactly what info each song and each listener profile keeps track of.
 
 ---
 
