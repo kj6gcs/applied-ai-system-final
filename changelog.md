@@ -4,7 +4,51 @@
 
 ### Applied AI Final Project
 
-## [2.0.1-dev] - In Development
+## [2.0.0-alpha.3] - 2026-07-31
+
+### Added
+
+- Added `AgentConfig`, a small configuration dataclass exposing the `ResonanceAgent`'s preference-drift tuning knobs (`min_feedback_for_drift`, `categorical_shift_threshold`, `max_tempo_step`, `max_valence_step`, `max_danceability_step`, `max_decade_step`) instead of hard-coded constants.
+- Added 4 focused tests confirming: default configuration preserves prior behavior, a custom `min_feedback_for_drift` changes when drift begins, a custom numeric max step changes the bounded update amount, and a custom categorical threshold changes when a categorical preference shifts.
+
+### Changed
+
+- `ResonanceAgent` now accepts an optional `config: AgentConfig` parameter in its constructor; omitting it preserves the exact prior tuning behavior.
+
+### Verified
+
+- All **38 automated tests** pass successfully.
+- Existing recommendation-engine behavior, CLI output, and the public agent interface (`observe_feedback()`, `run_cycle()`, `get_profile()`, `get_history()`) remain unchanged.
+
+## [2.0.0-alpha.2] - 2026-07-31
+
+### Added
+
+- Added the initial implementation of the **ResonanceAgent**, the adaptive AI layer responsible for observing listener feedback, detecting preference drift, updating listener profiles, and orchestrating the existing recommendation engine.
+- Added support for listener feedback events, including **likes**, **skips**, and **replays**.
+- Added bounded, evidence-based **preference drift**, allowing listener profiles to evolve gradually through repeated interactions rather than reacting dramatically to a single event.
+- Added recommendation-cycle history that records profile snapshots, feedback received, recommendations generated, explanation summaries, and quality warnings for future explainability and evaluation.
+- Added a second explainability layer that communicates **why recommendations changed** between recommendation cycles while preserving the recommendation engine's existing per-song explanations.
+- Added basic recommendation quality checks to detect empty recommendation lists, repeated artists, and excessive genre dominance.
+- Added `tests/test_agent.py` with comprehensive automated tests covering feedback validation, preference drift, recommendation delegation, recommendation history, explainability, and quality checks.
+
+### Changed
+
+- Expanded Resonance from a static recommendation engine into a stateful, adaptive **agentic AI system** centered around the `ResonanceAgent`.
+- Introduced a simplified public agent interface consisting of:
+  - `observe_feedback()`
+  - `run_cycle()`
+  - `get_profile()`
+  - `get_history()`
+- Preserved the existing deterministic recommendation engine as a validated service used by the agent rather than replacing or modifying its scoring algorithm.
+
+### Verified
+
+- All **34 automated tests** pass successfully.
+- Existing command-line interface (CLI) behavior remains fully compatible with Resonance v1.0.
+- Existing recommendation scores, rankings, explanations, diversity behavior, and CSV catalog remain unchanged following the introduction of the ResonanceAgent.
+
+## [2.0.0-alpha.1] - 07-31-2026
 
 ### Changed
 

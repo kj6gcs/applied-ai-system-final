@@ -16,17 +16,21 @@ from src.recommender import Recommender, Song, UserProfile, song_popularity
 
 logger = logging.getLogger(__name__)
 
-# A cycle's worth of feedback must reach this size before any profile change
-# is even considered -- this is what makes "one interaction never dramatically
-# changes the profile" a structural guarantee rather than a hope.
-MIN_FEEDBACK_FOR_DRIFT = 3
-
-# A categorical field (favorite_genre, favorite_mood, ...) only shifts once a
-# single alternate value shows up at least this many times in positive feedback.
-CATEGORICAL_SHIFT_THRESHOLD = 3
-
 FEEDBACK_EVENT_TYPES = ("like", "skip", "replay")
 POSITIVE_EVENT_TYPES = ("like", "replay")
+
+
+@dataclass
+class AgentConfig:
+    """Tuning knobs for preference-drift reasoning. Defaults match Resonance v2.0's
+    original hard-coded behavior -- constructing ResonanceAgent without a config
+    is equivalent to passing AgentConfig()."""
+    min_feedback_for_drift: int = 3
+    categorical_shift_threshold: int = 3
+    max_tempo_step: float = 5.0
+    max_valence_step: float = 0.05
+    max_danceability_step: float = 0.05
+    max_decade_step: int = 5
 
 
 @dataclass
@@ -72,12 +76,12 @@ class RecommendationCycle:
     change_explanation: str
 
 
-# (profile field, matching Song attribute, max change per cycle, value type)
+# (profile field, matching Song attribute, AgentConfig field naming the max step, value type)
 NUMERIC_DRIFT_FIELDS = [
-    ("target_tempo", "tempo_bpm", 5.0, float),
-    ("target_valence", "valence", 0.05, float),
-    ("target_danceability", "danceability", 0.05, float),
-    ("target_decade", "release_decade", 5, int),
+    ("target_tempo", "tempo_bpm", "max_tempo_step", float),
+    ("target_valence", "valence", "max_valence_step", float),
+    ("target_danceability", "danceability", "max_danceability_step", float),
+    ("target_decade", "release_decade", "max_decade_step", int),
 ]
 
 # (profile field, function deriving that field's "value" from a Song)
@@ -93,9 +97,10 @@ CATEGORICAL_DRIFT_FIELDS = [
 class ResonanceAgent:
     """Observes feedback, detects preference drift, and orchestrates the engine."""
 
-    def __init__(self, recommender: Recommender, profile: UserProfile):
+    def __init__(self, recommender: Recommender, profile: UserProfile, config: AgentConfig = None):
         self._recommender = recommender
         self._current_profile = profile
+        self._config = config if config is not None else AgentConfig()
         self._pending_feedback: List[FeedbackEvent] = []
         self._feedback_log: List[FeedbackEvent] = []
         self._history: List[RecommendationCycle] = []
@@ -179,7 +184,7 @@ class ResonanceAgent:
 
     def _detect_drift(self) -> ProfileUpdate:
         evidence = list(self._pending_feedback)
-        if len(self._pending_feedback) < MIN_FEEDBACK_FOR_DRIFT:
+        if len(self._pending_feedback) < self._config.min_feedback_for_drift:
             return ProfileUpdate(changes=[], evidence=evidence)
 
         positive_events = [e for e in self._pending_feedback if e.event_type in POSITIVE_EVENT_TYPES]
@@ -187,7 +192,8 @@ class ResonanceAgent:
 
         changes: List[FieldChange] = []
 
-        for field_name, song_attr, max_step, cast_type in NUMERIC_DRIFT_FIELDS:
+        for field_name, song_attr, max_step_attr, cast_type in NUMERIC_DRIFT_FIELDS:
+            max_step = getattr(self._config, max_step_attr)
             change = self._drift_numeric_field(
                 field_name, song_attr, max_step, cast_type, positive_events, negative_events
             )
@@ -254,7 +260,7 @@ class ResonanceAgent:
             return None
 
         best_value, best_count = max(candidates.items(), key=lambda pair: pair[1])
-        if best_count < CATEGORICAL_SHIFT_THRESHOLD:
+        if best_count < self._config.categorical_shift_threshold:
             return None
 
         return FieldChange(

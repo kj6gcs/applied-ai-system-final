@@ -2,7 +2,7 @@
 delegation to the (unchanged) recommendation engine, and quality evaluation."""
 import pytest
 
-from src.agent import ResonanceAgent
+from src.agent import AgentConfig, ResonanceAgent
 from src.recommender import Recommender, Song, UserProfile
 
 
@@ -69,8 +69,12 @@ def make_profile(**overrides) -> UserProfile:
     return UserProfile(**fields)
 
 
-def make_agent(songs=None, profile=None) -> ResonanceAgent:
-    return ResonanceAgent(Recommender(songs if songs is not None else make_catalog()), profile or make_profile())
+def make_agent(songs=None, profile=None, config=None) -> ResonanceAgent:
+    return ResonanceAgent(
+        Recommender(songs if songs is not None else make_catalog()),
+        profile or make_profile(),
+        config=config,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -253,3 +257,68 @@ def test_get_history_returns_a_copy_of_the_internal_list():
     history.append("not a real cycle")
 
     assert len(agent.get_history()) == 1
+
+
+# ---------------------------------------------------------------------------
+# AgentConfig: tuning knobs are configurable, defaults preserve prior behavior
+# ---------------------------------------------------------------------------
+
+def test_default_config_preserves_existing_behavior():
+    implicit_agent = make_agent()
+    explicit_agent = make_agent(config=AgentConfig())
+
+    for agent in (implicit_agent, explicit_agent):
+        agent.observe_feedback(1, "skip")
+        agent.observe_feedback(2, "skip")
+        agent.observe_feedback(3, "skip")
+
+    implicit_cycle = implicit_agent.run_cycle(k=3)
+    explicit_cycle = explicit_agent.run_cycle(k=3)
+
+    assert implicit_cycle.profile_after.target_tempo == explicit_cycle.profile_after.target_tempo == 115.0
+
+
+def test_custom_min_feedback_for_drift_changes_when_drift_begins():
+    default_agent = make_agent()
+    custom_agent = make_agent(config=AgentConfig(min_feedback_for_drift=1))
+
+    default_agent.observe_feedback(1, "skip")
+    custom_agent.observe_feedback(1, "skip")
+
+    default_cycle = default_agent.run_cycle(k=3)
+    custom_cycle = custom_agent.run_cycle(k=3)
+
+    assert default_cycle.profile_after == default_cycle.profile_before  # 1 event < default threshold of 3
+    assert custom_cycle.profile_after.target_tempo != custom_cycle.profile_before.target_tempo  # 1 event >= custom threshold of 1
+
+
+def test_custom_max_tempo_step_changes_bounded_update_amount():
+    default_agent = make_agent()
+    custom_agent = make_agent(config=AgentConfig(max_tempo_step=10.0))
+
+    for agent in (default_agent, custom_agent):
+        agent.observe_feedback(1, "skip")
+        agent.observe_feedback(2, "skip")
+        agent.observe_feedback(3, "skip")
+
+    default_cycle = default_agent.run_cycle(k=3)
+    custom_cycle = custom_agent.run_cycle(k=3)
+
+    assert default_cycle.profile_after.target_tempo == 115.0  # clamped to default max_tempo_step=5.0
+    assert custom_cycle.profile_after.target_tempo == 110.0  # clamped to custom max_tempo_step=10.0
+
+
+def test_custom_categorical_shift_threshold_changes_when_preference_shifts():
+    default_agent = make_agent()
+    custom_agent = make_agent(config=AgentConfig(categorical_shift_threshold=2))
+
+    for agent in (default_agent, custom_agent):
+        agent.observe_feedback(4, "like")  # jazz
+        agent.observe_feedback(5, "like")  # jazz
+        agent.observe_feedback(1, "skip")  # pop, fast -- pads feedback count, adds no jazz evidence
+
+    default_cycle = default_agent.run_cycle(k=3)
+    custom_cycle = custom_agent.run_cycle(k=3)
+
+    assert default_cycle.profile_after.favorite_genre == "pop"  # 2 jazz likes < default threshold of 3
+    assert custom_cycle.profile_after.favorite_genre == "jazz"  # 2 jazz likes >= custom threshold of 2
