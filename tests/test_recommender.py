@@ -187,7 +187,7 @@ def test_recommend_songs_handles_k_larger_than_catalog():
 def test_load_songs_reads_full_catalog():
     songs = load_songs("data/songs.csv")
 
-    assert len(songs) == 60
+    assert len(songs) == 210
     assert songs[0]["title"] == "Sunrise City"
     assert isinstance(songs[0]["tempo_bpm"], float)
 
@@ -226,9 +226,10 @@ def test_regression_robbys_profile_matches_documented_top5():
         "Back In Black",
         "Storm Runner",
         "Dreams",
-        "Thunderstruck",
-        "Bohemian Rhapsody",
+        "Carry on Wayward Son",
+        "More Than a Feeling",
     ]
+    
     assert round(results[0][1], 2) == 5.38
 
 

@@ -15,7 +15,21 @@
 
 > Resonance v2.0 evolves the original deterministic music recommender into a stateful, adaptive recommendation agent that learns from listener feedback while preserving the transparent scoring engine developed in v1.0.
 
-## [2.0.0-beta.1] - 2026-08-01
+## [2.0.0-beta.2] - 08-01-2026
+
+### Expanded Song Catalog
+
+- Expanded the Resonance song catalog from 60 to 210 tracks, increasing the candidate pool by 250%.
+- Preserved the original 60-song dataset in `docs/songs_v1_60.csv` for reproducibility and historical reference.
+- Added broader representation across rock, pop, country, hip-hop, R&B/soul, jazz, classical, ambient, electronic, reggae, blues, metal, punk, indie, acoustic, and other genres.
+- Added additional acoustic recordings and several cover/reinterpretation recordings to improve recommendation variety.
+- Preserved the existing song-data schema so the expanded catalog remains compatible with the existing recommendation engine and agent architecture.
+- Updated the documented recommender regression baseline after newly added songs legitimately entered the top-ranked results for the existing test profile.
+- Verified that no recommendation scoring changes were required for the expanded catalog.
+- Confirmed the complete automated test suite passes with the expanded dataset: **54/54 tests passing**.
+- Performed a multi-cycle Streamlit smoke test confirming that feedback collection, song advancement, recommendation cycles, bounded preference drift, profile history, explanations, and recommendation-quality warnings continue to operate correctly with the larger catalog.
+
+## [2.0.0-beta.1] - 08-01-2026
 
 ### Added
 
@@ -41,7 +55,7 @@
 
 ---
 
-## [2.0.0-alpha.5] - 2026-07-31
+## [2.0.0-alpha.5] - 07-31-2026
 
 ### Added
 
@@ -72,7 +86,7 @@
 
 ---
 
-## [2.0.0-alpha.4] - 2026-07-31
+## [2.0.0-alpha.4] - 07-31-2026
 
 ### Added
 
@@ -97,7 +111,7 @@
 
 ---
 
-## [2.0.0-alpha.3] - 2026-07-31
+## [2.0.0-alpha.3] - 07-31-2026
 
 ### Added
 
@@ -123,7 +137,7 @@
 
 ---
 
-## [2.0.0-alpha.2] - 2026-07-31
+## [2.0.0-alpha.2] - 07-31-2026
 
 ### Added
 
@@ -153,7 +167,7 @@
 
 ---
 
-## [2.0.0-alpha.1] - 2026-07-31
+## [2.0.0-alpha.1] - 07-31-2026
 
 ### Added
 

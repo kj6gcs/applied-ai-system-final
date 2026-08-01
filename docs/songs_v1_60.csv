@@ -1,0 +1,61 @@
+id,title,artist,genre,mood,tempo_bpm,valence,danceability,acousticness,release_decade,mood_tag_primary,mood_tag_secondary,billboard_peak_at_release,billboard_peak_overall
+1,Sunrise City,Neon Echo,pop,happy,118,0.84,0.79,0.18,2020s,joy,optimism,,
+2,Midnight Coding,LoRoom,lofi,chill,78,0.56,0.62,0.71,2020s,calm,focus,,
+3,Storm Runner,Voltline,rock,intense,152,0.48,0.66,0.10,2020s,adrenaline,defiance,,
+4,Library Rain,Paper Lanterns,lofi,chill,72,0.60,0.58,0.86,2020s,calm,nostalgia,,
+5,Gym Hero,Max Pulse,pop,intense,132,0.77,0.88,0.05,2020s,determination,excitement,,
+6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,60,0.65,0.41,0.92,2020s,wonder,solitude,,
+7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,90,0.71,0.54,0.89,2020s,contentment,nostalgia,,
+8,Night Drive Loop,Neon Echo,synthwave,moody,110,0.49,0.73,0.22,2020s,longing,mystery,,
+9,Focus Flow,LoRoom,lofi,focused,80,0.59,0.60,0.78,2020s,concentration,calm,,
+10,Rooftop Lights,Indigo Parade,indie pop,happy,124,0.81,0.82,0.35,2020s,joy,freedom,,
+11,Back In Black,AC/DC,rock,intense,96,0.55,0.55,0.05,1980s,defiance,resilience,37,37
+12,Thunderstruck,AC/DC,rock,intense,133,0.45,0.50,0.02,1990s,adrenaline,power,55,55
+13,Big Balls,AC/DC,rock,playful,128,0.75,0.60,0.05,1970s,humor,mischief,,
+14,White & Nerdy,Weird Al Yankovic,novelty,playful,85,0.80,0.75,0.10,2000s,humor,cleverness,9,9
+15,Eat It,Weird Al Yankovic,novelty,playful,110,0.78,0.70,0.10,1980s,humor,playfulness,12,12
+16,Amish Paradise,Weird Al Yankovic,novelty,playful,90,0.70,0.65,0.15,1990s,humor,satire,53,53
+17,Ring of Fire,Johnny Cash,country,passionate,120,0.65,0.55,0.60,1960s,passion,danger,17,17
+18,Folsom Prison Blues,Johnny Cash,country,somber,100,0.40,0.45,0.55,1960s,regret,longing,32,32
+19,Jolene,Dolly Parton,country,anxious,78,0.35,0.40,0.70,1970s,desperation,insecurity,60,60
+20,9 to 5,Dolly Parton,country,upbeat,106,0.85,0.80,0.25,1980s,determination,empowerment,1,1
+21,Friends in Low Places,Garth Brooks,country,rowdy,130,0.75,0.65,0.45,1990s,camaraderie,defiance,85,85
+22,Man! I Feel Like a Woman!,Shania Twain,country,confident,132,0.82,0.78,0.20,1990s,confidence,liberation,35,35
+23,Beautiful Crazy,Luke Combs,country,romantic,72,0.60,0.35,0.65,2010s,adoration,tenderness,65,65
+24,Whiskey Glasses,Morgan Wallen,country,heartbroken,100,0.35,0.50,0.40,2010s,heartbreak,numbness,55,55
+25,Follow Your Arrow,Kacey Musgraves,country,carefree,120,0.80,0.65,0.40,2010s,liberation,individuality,90,90
+26,Before He Cheats,Carrie Underwood,country,vengeful,130,0.55,0.60,0.25,2000s,vengeance,empowerment,8,8
+27,Tennessee Whiskey,Chris Stapleton,country,soulful,60,0.55,0.40,0.55,2010s,soulfulness,longing,59,28
+28,Bohemian Rhapsody,Queen,rock,epic,72,0.45,0.35,0.30,1970s,drama,defiance,9,2
+29,Don't Stop Me Now,Queen,rock,euphoric,156,0.90,0.70,0.05,1970s,euphoria,freedom,86,65
+30,Billie Jean,Michael Jackson,funk,moody,117,0.60,0.90,0.05,1980s,paranoia,obsession,1,1
+31,Stayin' Alive,Bee Gees,disco,confident,104,0.75,0.88,0.10,1970s,resilience,confidence,1,1
+32,Smells Like Teen Spirit,Nirvana,grunge,angsty,117,0.35,0.45,0.02,1990s,rebellion,angst,6,6
+33,Lose Yourself,Eminem,hip hop,determined,86,0.45,0.60,0.03,2000s,determination,urgency,1,1
+34,HUMBLE.,Kendrick Lamar,hip hop,confident,75,0.35,0.75,0.02,2010s,confidence,defiance,1,1
+35,Crazy In Love,Beyoncé,r&b,euphoric,99,0.75,0.80,0.05,2000s,infatuation,euphoria,1,1
+36,I Wanna Dance with Somebody,Whitney Houston,pop,euphoric,119,0.90,0.85,0.10,1980s,joy,longing,1,1
+37,Three Little Birds,Bob Marley,reggae,peaceful,76,0.85,0.65,0.50,1970s,reassurance,hope,90,50
+38,One Love,Bob Marley,reggae,hopeful,68,0.70,0.55,0.55,1970s,unity,hope,95,70
+39,One More Time,Daft Punk,edm,euphoric,123,0.85,0.88,0.02,2000s,euphoria,celebration,61,61
+40,Summer,Calvin Harris,edm,uplifting,128,0.80,0.80,0.03,2010s,nostalgia,joy,23,23
+41,Enter Sandman,Metallica,metal,dark,123,0.30,0.40,0.02,1990s,dread,power,16,16
+42,Paranoid,Black Sabbath,metal,aggressive,162,0.35,0.45,0.02,1970s,dread,anxiety,61,61
+43,Blitzkrieg Bop,The Ramones,punk,rebellious,177,0.55,0.60,0.03,1970s,rebellion,energy,,
+44,Blowin' in the Wind,Bob Dylan,folk,reflective,108,0.45,0.30,0.85,1960s,yearning,hope,70,70
+45,The Sound of Silence,Simon & Garfunkel,folk,melancholic,65,0.25,0.25,0.85,1960s,isolation,melancholy,1,1
+46,Dreams,Fleetwood Mac,rock,wistful,120,0.55,0.60,0.35,1970s,nostalgia,wistfulness,1,1
+47,Someone Like You,Adele,pop,heartbroken,67,0.20,0.25,0.75,2010s,heartbreak,longing,1,1
+48,Shape of You,Ed Sheeran,pop,flirty,96,0.85,0.85,0.15,2010s,flirtation,desire,1,1
+49,Eine kleine Nachtmusik,Mozart,classical,elegant,140,0.75,0.30,0.98,1780s,elegance,grace,,
+50,Symphony No. 5,Beethoven,classical,dramatic,108,0.40,0.20,0.98,1800s,drama,triumph,,
+51,Aruarian Dance,Nujabes,lofi,nostalgic,88,0.45,0.55,0.35,2000s,nostalgia,tranquility,,
+52,Electric Feel,MGMT,indie pop,dreamy,114,0.65,0.68,0.15,2000s,dreaminess,sensuality,85,70
+53,Nightcall,Kavinsky,synthwave,moody,106,0.35,0.60,0.03,2010s,mystery,longing,,
+54,Take Five,Dave Brubeck Quartet,jazz,relaxed,176,0.55,0.45,0.85,1950s,sophistication,calm,25,25
+55,An Ending (Ascent),Brian Eno,ambient,peaceful,60,0.50,0.15,0.60,1980s,awe,solitude,,
+56,Despacito,Luis Fonsi ft. Daddy Yankee,reggaeton,flirty,89,0.75,0.80,0.25,2010s,desire,celebration,1,1
+57,The Thrill Is Gone,B.B. King,blues,somber,92,0.25,0.35,0.55,1970s,heartbreak,resignation,15,15
+58,Under the Bridge,Red Hot Chili Peppers,alternative rock,melancholic,85,0.35,0.35,0.40,1990s,loneliness,longing,2,2
+59,Alive,Pearl Jam,grunge,intense,135,0.45,0.45,0.10,1990s,resilience,defiance,90,90
+60,Dynamite,BTS,k-pop,happy,114,0.90,0.85,0.05,2020s,joy,celebration,1,1
