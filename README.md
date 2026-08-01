@@ -10,178 +10,178 @@
 [![Model Card](https://img.shields.io/badge/Model_Card-Responsible_AI-purple?style=flat-square)](model_card.md)
 [![AI Interactions](https://img.shields.io/badge/AI_Interactions-Development_Log-blue?style=flat-square)](ai_interactions.md)
 [![Changelog](https://img.shields.io/badge/Changelog-Version_History-orange?style=flat-square)](changelog.md)
-[![Architecture](https://img.shields.io/badge/Architecture-Mermaid_Diagram-teal?style=flat-square)](diagrams/resonance_v2_architecture.mmd)
+[![Architecture](https://img.shields.io/badge/Architecture-Mermaid_Diagram-teal?style=flat-square)](diagrams/resonance_v2_architecture.md)
 
 ---
 
-## Part 1: Overview
+## Overview
 
-**Resonance** is an adaptive, explainable AI music recommendation system that continuously learns from listener feedback through transparent recommendation cycles.
+**Resonance** is an adaptive, explainable AI music recommendation system that learns from listener feedback through transparent recommendation cycles.
 
-Unlike traditional recommendation systems that simply rank songs from a static user profile, Resonance maintains an evolving listener profile that gradually adapts as the user interacts with recommendations. Every **Like**, **Skip**, and **Replay** contributes evidence that helps the system refine future recommendations while remaining deterministic, testable, and fully explainable.
+Unlike a recommender that relies on one static user profile, Resonance maintains an evolving listener profile that can gradually adapt as the user interacts with recommendations. Every **Like**, **Skip**, and **Replay** contributes evidence that may influence future recommendations while the underlying recommendation engine remains deterministic, testable, and explainable.
 
-At the heart of Resonance is the **ResonanceAgent**, a stateful AI component responsible for observing listener behavior, detecting preference drift, updating the listener profile, orchestrating recommendation cycles, and explaining how recommendations evolve over time.
+At the center of Resonance v2.0 is the **ResonanceAgent**, a stateful AI component responsible for observing listener behavior, detecting preference drift, updating the listener profile, orchestrating recommendation cycles, evaluating recommendation quality, explaining changes, and remembering previous cycles.
 
----
+### Why "Resonance"?
 
-## Why "Resonance"?
+Music is deeply personal, and listening preferences are not static.
 
-Music is deeply personal. Our preferences aren't static—they evolve with our experiences, moods, and listening habits.
+Resonance is named after the way music **resonates** with a listener. Rather than treating preferences as fixed forever, the system allows them to move gradually as new behavioral evidence appears.
 
-Resonance is named after the way music **resonates** with listeners. Rather than treating preferences as fixed values, Resonance models them as something that gradually changes over time.
-
-Every interaction becomes part of an ongoing conversation between the listener and the AI.
-
-Each recommendation cycle follows the same philosophy:
+The core adaptive cycle is:
 
 > **Observe → Reason → Adapt → Recommend → Explain → Remember**
 
-The result is a recommendation system that doesn't simply predict what you might enjoy—it continually adapts alongside you through transparent, explainable learning.
+The listener and the agent therefore continually **resonate with each other**: the listener's behavior changes the profile, and the changed profile influences what the system recommends next.
 
 ---
 
 ## Project Evolution
 
-This project began as **Resonance v1.0**, originally developed for **CodePath AI-110 Module 3**.
+Resonance v2.0 evolved from **Resonance v1.0**, originally developed for **CodePath AI-110 Module 3**.
 
 The original version focused on:
 
-- deterministic recommendation scoring
-- weighted recommendation ranking
-- explainable score breakdowns
-- command-line interaction
+- deterministic recommendation scoring;
+- weighted recommendation ranking;
+- explainable score breakdowns;
+- artist-diversity logic; and
+- command-line interaction.
 
-For the AI-110 final project, Resonance was redesigned into a complete adaptive AI system featuring:
+For the AI-110 final project, Resonance was extended into a stateful applied AI system featuring:
 
-- Stateful AI agent
-- Recommendation cycles
-- Listener feedback
-- Preference drift
-- Explainable AI
-- Streamlit interface
-- Reliability testing
-- Continuous profile adaptation
+- a behavioral recommendation agent;
+- Like / Skip / Replay feedback;
+- bounded preference drift;
+- recommendation-cycle history;
+- two-layer explainability;
+- controlled candidate selection;
+- recent-song avoidance;
+- a Streamlit listener interface;
+- structured logging;
+- automated reliability testing; and
+- a 210-song local catalog.
 
-The original recommendation engine remains fully intact and validated while serving as one of the tools used by the ResonanceAgent.
-
----
-
-# Features
-
-## Adaptive Recommendation Agent
-
-The **ResonanceAgent** continually learns from listener feedback while preserving deterministic recommendation behavior.
-
-Features include:
-
-- Like / Skip / Replay feedback
-- Stateful listener profiles
-- Bounded preference drift
-- Recommendation history
-- Recommendation-cycle explanations
-- Transparent adaptation
-- Deterministic behavior
-- Fully testable architecture
+The original deterministic recommendation engine remains the scoring foundation used by the ResonanceAgent rather than being replaced by the agent.
 
 ---
 
-## Explainable AI
+## Features
 
-Resonance provides **two independent explanation layers**.
+### Adaptive Recommendation Agent
 
-### Layer 1 — Recommendation Engine
+The **ResonanceAgent** learns from repeated listener feedback while preserving the deterministic recommendation engine beneath it.
+
+Key behaviors include:
+
+- Like / Skip / Replay feedback;
+- stateful listener profiles;
+- bounded numeric preference drift;
+- evidence-based categorical preference changes;
+- recommendation-cycle history;
+- quality checks;
+- adaptation explanations; and
+- configurable drift thresholds through `AgentConfig`.
+
+### Explainable AI
+
+Resonance provides two independent explanation layers.
+
+**Layer 1 — Recommendation Engine**
 
 Answers:
 
 > **Why was this song recommended?**
 
-Example:
+Possible factors include genre, mood, tempo, valence, danceability, acoustic preference, decade, mood tags, popularity, and artist-diversity penalties.
 
-- Genre match
-- Similar tempo
-- Mood alignment
-- Danceability similarity
-- Acoustic preference
-
----
-
-### Layer 2 — ResonanceAgent
+**Layer 2 — ResonanceAgent**
 
 Answers:
 
 > **Why did my recommendations change?**
 
-Example:
+The agent explains profile changes between recommendation cycles, including which feedback events supported each change.
 
-> "Your preferred tempo increased after consistently skipping slower songs. Future recommendations now emphasize higher-energy tracks while preserving your preferred genre."
+### Interactive Streamlit Interface
 
----
+The Streamlit application allows listeners to:
 
-## Interactive Streamlit Interface
+- choose a quick-start preset or build a custom listener profile;
+- receive one song recommendation at a time;
+- Like, Skip, or Replay songs;
+- watch feedback accumulate toward the next cycle;
+- observe profile drift when sufficient evidence exists;
+- inspect recommendation explanations;
+- review cycle history; and
+- explore advanced AI details and quality warnings.
 
-Resonance includes a fully interactive Streamlit application allowing users to:
+### Reliability
 
-- Create a listener profile
-- Choose from preset profiles
-- Receive continuous recommendations
-- Like songs
-- Skip songs
-- Replay songs
-- Watch the listener profile evolve
-- Review recommendation history
-- Explore advanced AI details
+Resonance emphasizes reliability through:
 
----
-
-## Reliability
-
-Resonance emphasizes reliability through deterministic behavior and automated testing.
-
-Current safeguards include:
-
-- Recommendation regression testing
-- Deterministic scoring
-- Input validation
-- Feedback validation
-- Recommendation quality checks
-- Repeat-artist detection
-- Controlled preference drift
-- Streamlit UI testing
+- 54 automated tests;
+- deterministic recommendation scoring;
+- regression testing;
+- feedback validation;
+- bounded preference changes;
+- recommendation-quality checks;
+- recent-song protection;
+- configurable agent thresholds;
+- Streamlit application tests; and
+- structured logging.
 
 ---
 
-# Architecture Overview
+## Architecture
 
-Resonance separates recommendation logic from AI reasoning.
+Resonance separates the listener interface, adaptive agent, deterministic recommender, and session-level song-selection logic.
 
 ```text
-                    Streamlit UI
-                         │
-                         ▼
-                 ResonanceAgent
-      ┌──────────────┼──────────────┐
-      ▼              ▼              ▼
- Feedback      Listener Profile    History
- Analysis          Manager         Timeline
-      │              │              │
-      └──────────────┼──────────────┘
-                     ▼
-         Recommendation Engine
-                     │
-                     ▼
-              Song Recommendations
-                     │
-                     ▼
-      Recommendation Explanations
+Listener
+   │
+   ▼
+Streamlit Interface
+   │
+   ▼
+ResonanceAgent
+   │
+   ├── Observe feedback
+   ├── Reason about evidence
+   ├── Apply bounded profile drift
+   ├── Evaluate recommendation quality
+   ├── Explain changes
+   └── Remember cycle history
+   │
+   ▼
+Deterministic Recommendation Engine
+   │
+   ├── Score catalog
+   ├── Rank candidates
+   ├── Apply artist-diversity penalty
+   └── Explain recommendation scores
+   │
+   ▼
+Weighted Session Song Selection
+   │
+   ├── Prefer stronger candidates
+   └── Avoid recently shown songs
+   │
+   ▼
+Next Recommendation
 ```
 
-The recommendation engine remains deterministic.
+The final Mermaid architecture source and rendered GitHub diagram are available in:
 
-The **ResonanceAgent** provides the adaptive intelligence.
+[`diagrams/resonance_v2_architecture.md`](diagrams/resonance_v2_architecture.md)
+
+A key design principle is:
+
+> **The recommendation engine determines which songs fit the current profile. The ResonanceAgent determines how that profile evolves over time.**
 
 ---
 
-# Technology Stack
+## Technology Stack
 
 | Component             | Technology                   |
 | --------------------- | ---------------------------- |
@@ -195,42 +195,39 @@ The **ResonanceAgent** provides the adaptive intelligence.
 
 ---
 
-# Installation
+## Installation
 
-## Clone the Repository
+### Clone the Repository
 
 ```bash
 git clone https://github.com/kj6gcs/applied-ai-system-final.git
 cd applied-ai-system-final
 ```
 
----
+### Create a Virtual Environment
 
-## Create a Virtual Environment
-
-Windows
+**Windows PowerShell**
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\activate
 ```
 
-Git Bash
+**Git Bash**
 
 ```bash
+python -m venv .venv
 source .venv/Scripts/activate
 ```
 
-macOS / Linux
+**macOS / Linux**
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
----
-
-## Install Dependencies
+### Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -238,327 +235,187 @@ pip install -r requirements.txt
 
 ---
 
-Continue to **Part 2** for running the CLI, launching the Streamlit interface, recommendation cycles, example interactions, and project structure.
+## Running Resonance
 
-# Part 2: Running Resonance
+Resonance provides two primary entry points.
 
-Resonance provides two ways to interact with the recommendation engine:
+### Command-Line Interface
 
-- **Command-Line Interface (CLI)** — ideal for testing and development
-- **Streamlit Application** — a fully interactive recommendation experience
-
----
-
-# Command-Line Interface
-
-Run the original CLI application:
+Run:
 
 ```bash
 python -m src.main
 ```
 
-The CLI demonstrates the original recommendation engine using predefined listener profiles and displays:
+The CLI evaluates several predefined listener profiles against the catalog and displays:
 
-- Ranked song recommendations
-- Recommendation scores
-- Recommendation explanations
-- Deterministic recommendation output
+- ranked recommendations;
+- scores;
+- recommendation explanations;
+- diversity penalties where applicable; and
+- deterministic regression behavior.
 
-This interface remains intentionally unchanged from Resonance v1.0 to preserve regression testing and ensure recommendation consistency.
+### Streamlit Application
 
----
-
-# Streamlit Application
-
-Launch the interactive interface:
+Launch:
 
 ```bash
 streamlit run app.py
 ```
 
-Your browser should automatically open.
+Streamlit should open automatically in a browser. If it does not, navigate to:
 
-If it does not, navigate to:
-
-```
+```text
 http://localhost:8501
 ```
 
-The Streamlit application demonstrates the complete adaptive AI workflow and is the recommended way to experience Resonance.
+The Streamlit application is the recommended way to experience the complete adaptive listener workflow.
 
 ---
 
-# User Experience
+## Listener Experience
 
-The Streamlit application guides listeners through two stages.
+### Stage 1 — Build a Listener Profile
 
----
+A listener can choose a built-in preset or create a custom profile.
 
-## Stage 1 — Build a Listener Profile
-
-Choose one of the built-in presets or create a completely custom listener profile.
-
-Current profile attributes include:
+Profile attributes include:
 
 - Favorite Genre
 - Preferred Mood
 - Target Tempo
-- Target Valence (Emotional Tone)
-- Danceability
+- Target Valence
+- Target Danceability
 - Acoustic Preference
 - Preferred Decade
 - Mood Tag
 - Mainstream vs. Discovery Preference
 
-These values provide the ResonanceAgent with an initial understanding of the listener before adaptation begins.
+These values provide the initial state from which the ResonanceAgent begins adapting.
+
+### Stage 2 — Continuous Recommendation Session
+
+Resonance presents one song at a time.
+
+For each recommendation, the listener can choose:
+
+- 👍 **Like**
+- 👎 **Skip**
+- 🔁 **Replay**
+
+Each interaction is recorded as evidence. When sufficient feedback accumulates, the ResonanceAgent can run a new recommendation cycle and update the listener profile.
 
 ---
 
-## Stage 2 — Continuous Recommendation Session
+## Recommendation Cycle
 
-After creating a profile, Resonance begins recommending one song at a time.
-
-For every recommendation the user can choose:
-
-- 👍 Like
-- 👎 Skip
-- 🔁 Replay
-
-Each interaction becomes evidence used by the ResonanceAgent.
-
-Recommendations continue indefinitely while the listener profile gradually evolves.
-
----
-
-# Recommendation Cycle
-
-Every recommendation follows the same six-stage workflow.
+The adaptive workflow follows six conceptual stages:
 
 ```text
 Observe
-    │
-    ▼
+   ↓
 Reason
-    │
-    ▼
+   ↓
 Adapt
-    │
-    ▼
+   ↓
 Recommend
-    │
-    ▼
+   ↓
 Explain
-    │
-    ▼
+   ↓
 Remember
 ```
 
----
+### Observe
 
-## 1. Observe
+The agent receives Like, Skip, and Replay feedback and validates both the feedback type and referenced song.
 
-The ResonanceAgent records listener feedback.
+### Reason
 
-Possible feedback events include:
+The agent evaluates whether enough evidence exists to justify a profile change.
 
-- Like
-- Skip
-- Replay
+### Adapt
 
-These events are temporarily collected until sufficient evidence exists for adaptation.
+When thresholds are met, the agent applies bounded preference drift. Numeric attributes change gradually, and categorical changes require repeated supporting evidence.
 
----
+### Recommend
 
-## 2. Reason
+The updated profile is passed to the deterministic recommendation engine, which scores the catalog and produces a ranked candidate pool.
 
-Rather than reacting immediately to a single interaction, Resonance waits until enough evidence has accumulated.
+### Explain
 
-This prevents abrupt profile changes and reduces noise from isolated interactions.
+Resonance explains both why a song was recommended and why the listener profile changed.
 
----
+### Remember
 
-## 3. Adapt
-
-When sufficient evidence exists, the ResonanceAgent applies **bounded preference drift**.
-
-Examples include:
-
-- Increasing preferred tempo
-- Decreasing preferred danceability
-- Updating preferred genre
-- Adjusting emotional tone
-
-Each adjustment is intentionally small and fully explainable.
+The completed cycle is stored in recommendation history with profile snapshots, applied feedback, recommendations, explanations, and quality warnings.
 
 ---
 
-## 4. Recommend
+## Controlled Candidate Selection
 
-The updated listener profile is passed to the deterministic recommendation engine.
+The interactive session does not always display the single highest-ranked song.
 
-The recommendation engine:
-
-- Scores every song
-- Applies diversity penalties
-- Produces a ranked candidate pool
-
-A weighted candidate-selection algorithm then introduces controlled variety while preserving recommendation quality.
-
----
-
-## 5. Explain
-
-Resonance provides two independent explanation layers.
-
-### Recommendation Explanation
-
-Explains why the current song was recommended.
-
-Example:
-
-```
-Genre Match
-Mood Alignment
-Tempo Similarity
-Acoustic Preference
-```
-
----
-
-### Adaptation Explanation
-
-Explains why future recommendations changed.
-
-Example:
-
-> Your preferred tempo increased after consistently skipping slower songs. Future recommendations now emphasize higher-energy tracks while preserving your preferred genre.
-
----
-
-## 6. Remember
-
-Every completed recommendation cycle is recorded.
-
-History includes:
-
-- Listener profile snapshot
-- Feedback received
-- Recommendation generated
-- Preference changes
-- Explanation of adaptation
-
-This historical record allows the recommendation process to remain transparent and reproducible.
-
----
-
-# Example Recommendation Session
-
-## Initial Profile
+Instead:
 
 ```text
-Favorite Genre: Rock
-Preferred Tempo: 110 BPM
-Preferred Mood: Energetic
+Listener Profile
+      │
+      ▼
+Recommendation Engine
+      │
+      ▼
+Ranked Candidates
+      │
+      ▼
+Top Candidate Pool
+      │
+      ▼
+Remove Recent Songs
+      │
+      ▼
+Weighted Random Selection
+      │
+      ▼
+Next Recommendation
 ```
+
+Higher-ranked songs receive greater selection weight, but lower-ranked strong candidates can still appear. This introduces variety while preserving recommendation quality.
+
+The selection layer does **not** calculate scores or change rankings; it only chooses among candidates already evaluated by the recommendation engine.
 
 ---
 
-## Recommendation #1
+## Project Structure
 
-```
-Back In Black — AC/DC
-
-Reason
-
-✓ Genre Match
-✓ Tempo Match
-✓ High Popularity Alignment
-```
-
-User selects:
-
-```
-👍 Like
-```
-
----
-
-## Recommendation #2
-
-```
-Thunderstruck — AC/DC
-```
-
-User selects:
-
-```
-🔁 Replay
-```
-
----
-
-## Recommendation #3
-
-```
-Dreams — Fleetwood Mac
-```
-
-User selects:
-
-```
-👎 Skip
-```
-
----
-
-## Adaptation
-
-After sufficient feedback:
-
-```
-Recommendation Cycle Complete
-
-Preference Drift Detected
-
-Tempo
-110 BPM
-↓
-
-115 BPM
-
-Reason
-
-Repeated preference for higher-energy songs
-```
-
-Future recommendations now favor faster songs while preserving the listener's overall musical preferences.
-
----
-
-# Project Structure
-
-```
+```text
 applied-ai-system-final/
-
 │
 ├── app.py
 ├── README.md
 ├── model_card.md
 ├── changelog.md
 ├── ai_interactions.md
+├── LICENSE
 ├── requirements.txt
-│
-├── assets/
 │
 ├── data/
 │   └── songs.csv
 │
 ├── diagrams/
 │   ├── resonance_v1_architecture.md
-│   └── resonance_v2_architecture.mmd
+│   └── resonance_v2_architecture.md
 │
 ├── docs/
-│   └── README_v1.md
+│   ├── README_v1.md
+│   ├── model_card_v1.md
+│   ├── ai_interactions_v1.md
+│   ├── songs_v1_60.csv
+│   └── images/
+│       ├── automated_pytest_results.png
+│       ├── cli_static_profile_test.png
+│       ├── streamlit_listener_interface.png
+│       ├── streamlit_profile_drift.png
+│       └── streamlit_agent_details.png
 │
 ├── src/
 │   ├── agent.py
@@ -574,154 +431,237 @@ applied-ai-system-final/
     └── test_song_selection.py
 ```
 
----
-
-# Screenshots
-
-> **TODO:** Replace the placeholders below with screenshots from the completed application.
-
-## Listener Profile Setup
-
-_(Insert screenshot here)_
+The Streamlit screenshot filenames shown above are reserved for final verification evidence and may be added during the final testing pass.
 
 ---
 
-## Interactive Recommendation Session
+# Testing & Validation
 
-_(Insert screenshot here)_
+Resonance v2.0 is validated through automated testing, deterministic CLI execution, and interactive Streamlit testing.
 
----
+The final verification examples use the expanded **210-song catalog**.
 
-## Recommendation History & AI Details
+## Automated Test Suite
 
-_(Insert screenshot here)_
-
----
-
-Continue to **Part 3** for reliability testing, explainable AI, responsible AI, model evaluation, and technical design decisions.
-
-# Testing & Reliability
-
-A recommendation system should do more than produce plausible results—it should behave predictably, handle unexpected inputs safely, and provide evidence that its core functionality works as intended.
-
-Reliability was therefore treated as a core design requirement throughout the development of Resonance v2.0.
-
-At the current development milestone, the automated test suite contains **54 passing tests** covering the recommendation engine, adaptive agent, song-selection logic, and Streamlit interface.
-
-Run the complete test suite with:
+Reproduce the complete automated suite with:
 
 ```bash
 python -m pytest tests/ -v
 ```
 
-Example result:
+The final verification run executed **54 automated tests** covering:
 
-```text
-============================= test session starts =============================
-...
-============================= 54 passed ==============================
+- recommendation scoring and ranking;
+- recommendation explanations;
+- artist-diversity behavior;
+- catalog loading;
+- deterministic regression profiles;
+- feedback validation;
+- bounded preference drift;
+- configurable `AgentConfig` behavior;
+- recommendation-cycle history;
+- weighted song selection;
+- recent-song avoidance; and
+- Streamlit interface behavior.
+
+Final result: **54 of 54 tests passed.**
+
+![Resonance automated test suite showing 54 passing tests](docs/images/automated_pytest_results.png)
+
+_Final automated verification run confirming all 54 tests pass successfully._
+
+---
+
+## Static CLI Profile Test
+
+Reproduce the deterministic CLI run with:
+
+```bash
+python -m src.main
 ```
 
+The final verification run successfully loaded all **210 songs** and exercised multiple listener profiles and edge cases.
+
+For the documented static rock-oriented profile, the top five were:
+
+| Rank | Title                | Artist        | Score |
+| ---: | -------------------- | ------------- | ----: |
+|    1 | Back In Black        | AC/DC         |  5.38 |
+|    2 | Storm Runner         | Voltline      |  5.18 |
+|    3 | Dreams               | Fleetwood Mac |  4.44 |
+|    4 | Carry on Wayward Son | Kansas        |  4.38 |
+|    5 | More Than a Feeling  | Boston        |  4.36 |
+
+Each recommendation also included an explanation identifying the scoring factors that contributed to its ranking.
+
+![Resonance CLI static profile recommendation test](docs/images/cli_static_profile_test.png)
+
+_Final CLI verification showing ranked recommendations and explainable scoring for the documented static profile._
+
+### Expanded Catalog Regression Validation
+
+The original catalog contained 60 songs. Resonance v2.0 now evaluates **210 songs**, increasing the candidate pool by 250%.
+
+After the expansion, `Carry on Wayward Son` and `More Than a Feeling` legitimately entered the static rock profile's top five.
+
+The recommendation algorithm and scoring weights were **not changed** to produce these results. The existing engine simply had better candidates available.
+
+The regression baseline was updated only after manually reviewing the new rankings and explanations.
+
 ---
 
-## Test Coverage
+## Interactive Streamlit Testing
 
-The test suite is divided across four primary components:
+The final interactive verification was performed through a fresh multi-cycle listening session:
 
-| Test Module                    | Purpose                                                                                                                 |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| `tests/test_recommender.py`    | Validates scoring, ranking, explanations, catalog loading, diversity behavior, and regression outputs                   |
-| `tests/test_agent.py`          | Validates feedback handling, preference drift, recommendation cycles, configuration, history, and agent behavior        |
-| `tests/test_song_selection.py` | Validates controlled random selection, candidate weighting, repeat avoidance, and fallback behavior                     |
-| `tests/test_app.py`            | Validates the Streamlit user flow, profile creation, feedback controls, cycle advancement, and visible preference drift |
+```bash
+streamlit run app.py
+```
 
-This layered approach allows failures to be isolated to the recommendation engine, agent, selection layer, or user interface rather than treating the application as a single black box.
+The session verified the complete listener feedback loop:
 
----
+**Listener interaction → feedback collection → agent reasoning → bounded profile adaptation → new recommendations → explanation → cycle history**
+
+![Resonance listener interface](docs/images/streamlit_listener_interface.png)
+
+_The listener-facing Streamlit interface presents one recommendation at a time and allows the listener to Like, Skip, or Replay it._
+
+### Observed Adaptive Behavior
+
+The final verification session progressed through four adaptive recommendation cycles.
+
+One particularly useful example occurred during **Cycle #2**. Three liked/replayed songs provided enough evidence for Resonance to update several listener preferences:
+
+```text
+target_tempo:         120.0 → 125.0
+target_valence:       0.60  → 0.65
+target_danceability:  0.60  → 0.55
+target_decade:        1980  → 1977
+prefers_mainstream_hits: False → True
+```
+
+The Boolean preference changed only after the required supporting evidence was observed:
+
+```text
+Shifted prefers_mainstream_hits from False to True
+after 3 liked/replayed song(s) matching True
+```
+
+![Observed Resonance preference drift](docs/images/streamlit_profile_drift.png)
+
+_Observed preference drift after accumulated listener feedback triggered a new recommendation cycle._
+
+### Continued Adaptation
+
+Later cycles demonstrated that preference drift is **not permanently directional**.
+
+For example, tempo changed throughout the session:
+
+```text
+115 → 120 → 125 → 120 → 115 BPM
+```
+
+Rather than continually increasing the value, Resonance responded to newer evidence and moved the target back downward when subsequent liked/replayed songs supported slower tempos.
+
+The same behavior appeared across valence, danceability, and preferred decade.
+
+After Cycle #4, the active profile was:
+
+```text
+favorite_genre: rock
+favorite_mood: intense
+target_tempo: 115
+target_valence: 0.62
+target_danceability: 0.55
+likes_acoustic: false
+target_decade: 1977
+target_mood_tag: ambition
+prefers_mainstream_hits: true
+```
+
+![Resonance current adaptive profile](docs/images/streamlit_agent_profile.png)
+
+_The listener profile after four adaptive recommendation cycles._
+
+### Recommendation Quality Monitoring
+
+The same session also demonstrated the independent recommendation-quality evaluation layer.
+
+Resonance detected:
+
+```text
+Duplicate artists appear in the recommendation list.
+```
+
+and:
+
+```text
+All recommended songs share the same genre.
+```
+
+These warnings do not automatically alter the recommendation results. Instead, they expose potentially undesirable characteristics for inspection while preserving the recommendation engine's deterministic behavior.
+
+![Resonance recommendation cycle history](docs/images/streamlit_cycle_history.png)
+
+_Advanced AI Details showing recommendation-cycle history, adaptation explanations, and quality warnings._
 
 # Reliability Strategy
 
-Resonance combines several reliability techniques rather than relying on a single test or metric.
+Resonance combines several reliability techniques rather than relying on one metric.
 
 ## Deterministic Recommendation Engine
 
-The underlying recommendation engine remains deterministic.
-
 Given the same:
 
-- song catalog
-- listener profile
-- scoring configuration
+- catalog;
+- listener profile; and
+- scoring configuration,
 
-the engine produces the same ranked recommendations.
+the engine produces the same ranking.
 
-This makes recommendation behavior reproducible and allows previously validated outputs to be used as regression tests.
-
----
+This makes recommendation behavior reproducible and enables regression testing.
 
 ## Regression Testing
 
-Resonance v1.0 established known recommendation outputs for several listener profiles.
+Known recommendation outputs are used to detect unintended changes.
 
-Those behaviors were preserved while Resonance v2.0 introduced the adaptive agent and Streamlit interface.
-
-Regression tests verify that the original recommendation engine continues to produce expected results after architectural changes.
-
-This separation is intentional:
-
-> **The recommendation engine determines which songs fit the profile. The ResonanceAgent determines how that profile evolves.**
-
-Keeping these responsibilities separate allows the adaptive layer to grow without silently changing the validated scoring system beneath it.
-
----
+When the catalog itself changed from 60 to 210 songs, the regression baseline was intentionally updated only after reviewing why new songs entered the ranking.
 
 ## Bounded Preference Drift
 
-Resonance does not dramatically alter a listener profile after a single interaction.
+Resonance does not dramatically rewrite a profile after one interaction.
 
-Instead, the agent waits for multiple feedback events before applying preference drift.
+Default adaptation settings are:
 
-Default adaptation settings include:
-
-| Setting                         | Default             |
-| ------------------------------- | ------------------- |
-| Minimum feedback before drift   | 3 events            |
+| Setting                         |             Default |
+| ------------------------------- | ------------------: |
+| Minimum feedback before drift   |            3 events |
 | Categorical shift threshold     | 3 supporting events |
-| Maximum tempo adjustment        | 5 BPM               |
-| Maximum valence adjustment      | 0.05                |
-| Maximum danceability adjustment | 0.05                |
-| Maximum decade adjustment       | 5 years             |
+| Maximum tempo adjustment        |               5 BPM |
+| Maximum valence adjustment      |                0.05 |
+| Maximum danceability adjustment |                0.05 |
+| Maximum decade adjustment       |             5 years |
 
-These limits are represented through the agent's configuration rather than being embedded throughout the recommendation logic.
-
-The result is intentionally conservative adaptation: listener preferences **drift** rather than jump.
-
----
+These limits make adaptation gradual and explainable.
 
 ## Configurable Agent Behavior
 
-The `ResonanceAgent` supports configurable adaptation thresholds through `AgentConfig`.
-
-Default values preserve the validated system behavior, while custom configuration allows controlled experimentation.
+`AgentConfig` exposes the adaptation thresholds while preserving the validated defaults.
 
 Automated tests verify that:
 
-- default configuration preserves existing behavior
-- changing the minimum feedback threshold changes when adaptation begins
-- changing numeric step limits changes the maximum profile adjustment
-- changing categorical thresholds changes when categorical preferences shift
-
-This makes preference adaptation both testable and tunable without modifying the recommendation engine.
+- default configuration preserves existing behavior;
+- changing the minimum feedback threshold changes when drift begins;
+- changing numeric step limits changes the maximum profile adjustment; and
+- changing categorical thresholds changes when categorical preferences shift.
 
 ---
 
 # Guardrails & Error Handling
 
-Resonance includes guardrails at multiple levels of the system.
-
 ## Feedback Validation
 
-The agent accepts only recognized feedback events:
+The agent accepts only:
 
 ```text
 like
@@ -729,559 +669,279 @@ skip
 replay
 ```
 
-Invalid event types are rejected rather than silently influencing the listener profile.
-
-Feedback referencing an unknown song is also rejected.
-
----
+Unknown feedback types and unknown song IDs are rejected.
 
 ## Controlled Adaptation
 
-Profile changes are bounded to prevent individual recommendation cycles from producing extreme changes.
+Bounded changes protect the system from:
 
-This protects the system from:
-
-- accidental clicks
-- isolated outlier behavior
-- sudden profile instability
-- overreaction to limited evidence
-
----
+- isolated outliers;
+- accidental clicks;
+- sudden profile instability; and
+- overreaction to limited evidence.
 
 ## Recommendation Quality Checks
 
-The agent performs lightweight health checks on recommendation results.
+The agent can identify:
 
-These checks can identify conditions such as:
+- empty recommendation lists;
+- repeated artists; and
+- excessive single-genre dominance.
 
-- empty recommendation lists
-- repeated artists
-- excessive single-genre dominance
-
-These warnings do not silently rewrite recommendation results. Instead, they provide diagnostic information that can be reviewed through the application's advanced AI details.
-
-This distinction is intentional: **quality monitoring observes the recommendation system without replacing its decision-making process.**
-
----
+Warnings are surfaced for inspection rather than silently rewriting results.
 
 ## Recent-Song Protection
 
-The interactive application maintains a rolling history of recently displayed songs.
+The session tracks recently displayed songs and avoids them when alternatives are available. If every strong candidate was recently shown, the system safely allows a repeat rather than failing.
 
-When selecting the next recommendation, Resonance attempts to exclude recently shown tracks from the candidate pool.
+## Structured Logging
 
-If every available candidate has already appeared recently, the system safely falls back to allowing a repeat rather than failing to produce a recommendation.
-
----
-
-# Controlled Randomness
-
-A real listening experience should not repeatedly present the exact same highest-ranked song.
-
-However, completely random selection would undermine personalization.
-
-Resonance therefore uses **controlled randomness**.
-
-The process is:
-
-```text
-Listener Profile
-      │
-      ▼
-Recommendation Engine
-      │
-      ▼
-Ranked Recommendations
-      │
-      ▼
-Top Candidate Pool
-      │
-      ▼
-Remove Recent Songs
-      │
-      ▼
-Weighted Random Selection
-      │
-      ▼
-Next Recommendation
-```
-
-The recommendation engine first generates a ranked candidate pool.
-
-The session-selection layer then selects from the strongest candidates using rank-based weighting, giving higher-ranked songs a greater probability of appearing while still introducing variety.
-
-Importantly, the selection layer does **not** calculate recommendation scores or modify rankings. It only chooses among candidates already evaluated by the recommendation engine.
-
-Automated tests verify that the selection process:
-
-- returns a valid recommendation
-- avoids recently shown songs when possible
-- safely handles exhausted candidate pools
-- statistically favors higher-ranked candidates
-- behaves deterministically when provided a seeded random-number generator
-- rejects an empty candidate list
-- respects configured candidate-pool size
+Structured logging records useful diagnostic information without mixing debug output with user-facing recommendation output.
 
 ---
 
 # Interface Reliability
 
-Streamlit applications rerun the Python script as users interact with widgets.
+Streamlit reruns the Python script as users interact with widgets. Resonance uses `st.session_state` to preserve:
 
-Without careful state management, this behavior can cause an application to lose track of which song a listener actually rated.
+- the active listener profile;
+- `ResonanceAgent`;
+- recommendation engine;
+- active song;
+- recent song IDs;
+- feedback count for the current cycle;
+- latest drift explanation; and
+- current application stage.
 
-Resonance uses `st.session_state` to preserve session-specific state, including:
+The active song changes only when the listening workflow explicitly advances. This helps ensure a Like, Skip, or Replay applies to the song the listener actually saw.
 
-- active listener profile
-- ResonanceAgent instance
-- recommendation engine
-- active song
-- recently displayed songs
-- feedback collected during the current cycle
-- most recent preference-drift explanation
-- current application stage
+Automated Streamlit tests verify that:
 
-The active song changes only when the application explicitly advances the listening session.
-
-This ensures that a Like, Skip, or Replay action applies to the song the listener actually saw.
-
----
-
-# End-to-End UI Testing
-
-The Streamlit interface is tested programmatically using Streamlit's application-testing tools.
-
-Automated interface tests verify that:
-
-- the listener setup screen renders
-- preset profiles can begin a listening session
-- custom profiles create the expected `UserProfile`
-- feedback controls advance to another song
-- three feedback events trigger the next recommendation cycle
-- preference drift is displayed when adaptation occurs
-- advanced AI details remain accessible
-
-The application has also been verified to start successfully through a standard Streamlit server execution.
+- the setup screen renders;
+- presets begin a listening session;
+- custom profiles create the expected `UserProfile`;
+- feedback advances to a new song;
+- three feedback events trigger a new cycle;
+- visible preference drift appears when expected; and
+- Advanced AI Details remain available.
 
 ---
 
 # Explainable AI
 
-Explainability is a central design goal of Resonance.
-
-Rather than asking the user to trust a recommendation simply because "the AI chose it," the system exposes the reasoning behind both recommendation selection and profile adaptation.
-
-Resonance separates explainability into two layers.
-
----
+Explainability is a central design goal.
 
 ## Layer 1 — Why This Song?
 
-The deterministic recommendation engine explains why a song received its score.
+The recommendation engine can explain factors such as:
 
-Possible factors include:
-
-- genre match
-- mood alignment
-- tempo closeness
-- valence similarity
-- danceability similarity
-- acoustic preference
-- decade preference
-- mood-tag alignment
-- popularity preference
-
-The technical scoring breakdown remains available through the Streamlit interface for users who want additional detail.
-
----
+- genre match;
+- mood alignment;
+- tempo closeness;
+- valence similarity;
+- danceability similarity;
+- acoustic preference;
+- decade preference;
+- mood-tag alignment;
+- popularity preference; and
+- diversity penalties.
 
 ## Layer 2 — Why Did My Recommendations Change?
 
-The ResonanceAgent explains changes to the listener profile between recommendation cycles.
+The ResonanceAgent explains how the profile changed between cycles and what recent feedback supported the change.
 
-For example:
+The distinction is intentional:
 
-```text
-Previous preferred tempo: 110 BPM
-Updated preferred tempo: 115 BPM
-
-Reason:
-Recent feedback provided sufficient evidence for the agent to shift
-the listener's preferred tempo upward.
-```
-
-This distinction is important.
-
-The recommendation engine explains a **decision**.
-
-The ResonanceAgent explains **adaptation over time**.
-
-Together, these layers allow the user to inspect both what the system recommended and how listener behavior influenced future recommendations.
+> The recommendation engine explains a **decision**.  
+> The ResonanceAgent explains **adaptation over time**.
 
 ---
 
 # Design Decisions & Trade-Offs
 
-Several design decisions were made intentionally during the transition from Resonance v1.0 to v2.0.
-
 ## Deterministic Engine + Stateful Agent
 
-One option was to replace the original scoring system with a generative model.
-
-Instead, Resonance preserves the deterministic recommendation engine and places a stateful agent above it.
+Instead of replacing the original scoring system with a generative model, Resonance preserves the transparent engine and places a stateful agent above it.
 
 This provides:
 
-- reproducible recommendations
-- transparent scoring
-- easier automated testing
-- clear separation of responsibilities
-- adaptive behavior without sacrificing explainability
+- reproducibility;
+- transparent scoring;
+- easier automated testing;
+- clear separation of responsibilities; and
+- adaptive behavior without sacrificing explainability.
 
-The trade-off is that Resonance cannot discover complex latent preference relationships in the same way a large production recommendation model could.
-
-For this project, transparency and reliability were prioritized over model complexity.
-
----
+The trade-off is that Resonance does not learn complex latent preference representations like a large production recommender.
 
 ## Gradual Adaptation Instead of Immediate Learning
 
-A single Like or Skip may not represent a meaningful preference.
-
-Resonance therefore requires multiple feedback events before adapting the listener profile.
-
-The trade-off is that the system reacts more slowly.
-
-The benefit is greater stability and a lower chance of one accidental or unusual interaction significantly altering future recommendations.
-
----
+A single Like or Skip may be noise. Requiring multiple events slows adaptation but improves stability.
 
 ## Weighted Selection Instead of Pure Randomness
 
-Pure randomness creates variety but can produce poor recommendations.
+Pure randomness creates variety but weakens personalization. Always choosing rank #1 becomes repetitive.
 
-Always selecting the top-ranked song maximizes score but quickly becomes repetitive.
-
-Resonance uses a middle ground:
-
-> **Rank first, then introduce controlled randomness among strong candidates.**
-
-This preserves personalization while creating a more natural listening experience.
-
----
+Resonance ranks first, then introduces controlled randomness among strong candidates.
 
 ## Local Catalog Instead of a Live Music API
 
-Resonance currently uses a local CSV song catalog.
+The local CSV catalog keeps the project:
 
-A live music API could provide:
+- reproducible;
+- offline-capable;
+- credential-free;
+- unaffected by API rate limits; and
+- stable for grading and testing.
 
-- a much larger catalog
-- continuously updated music
-- richer metadata
-- possible preview or playback capabilities
+A future catalog-provider abstraction could add an external music service without replacing the recommendation engine.
 
-However, an external API would also introduce:
+## Session State Instead of Persistent Accounts
 
-- network dependency
-- authentication requirements
-- rate limits
-- changing external schemas
-- reduced reproducibility
+Profiles currently persist only during the active Streamlit session.
 
-For the AI-110 final project, the local catalog was retained so the complete system can be installed, tested, and evaluated without external services.
-
-A catalog-provider abstraction and external music API remain potential future enhancements.
-
----
-
-## Session State Instead of Persistent User Accounts
-
-Listener profiles currently persist for the active Streamlit session.
-
-A production application would likely use persistent storage such as a relational database or hosted service to retain profiles and recommendation history between sessions.
-
-Session-based storage was chosen for the current version because it:
-
-- keeps setup reproducible
-- avoids requiring external credentials
-- eliminates database dependencies
-- keeps the project focused on the adaptive AI workflow
-
-Persistent user profiles remain a future enhancement.
+This avoids database credentials and external dependencies while keeping the project focused on the adaptive workflow. Persistent profile storage remains a future enhancement.
 
 ---
 
 # Testing Summary
 
-At the current development milestone:
+At the final documented testing milestone:
 
-```text
-54 automated tests passing
-```
+> **54 automated tests pass against the 210-song catalog.**
 
-Testing has demonstrated that:
+Testing demonstrates that:
 
-- the original recommendation engine remains stable after the v2.0 redesign
-- recommendation scoring remains deterministic
-- the ResonanceAgent applies bounded preference drift
-- configuration changes affect adaptation predictably
-- invalid feedback is rejected
-- recommendation history is preserved
-- controlled randomness favors stronger candidates
-- recently shown songs are avoided when possible
-- the Streamlit interface correctly maintains session state
-- listener feedback advances recommendations
-- recommendation cycles execute automatically after sufficient feedback
-- profile adaptation can be surfaced to the listener through explainable messages
+- recommendation scoring remains deterministic;
+- the ResonanceAgent applies bounded preference drift;
+- configuration changes affect adaptation predictably;
+- invalid feedback is rejected;
+- recommendation history is preserved;
+- controlled randomness favors stronger candidates;
+- recently shown songs are avoided when possible;
+- Streamlit maintains active-session state; and
+- recommendation cycles trigger automatically after sufficient feedback.
 
-The most important reliability lesson from development was that adding adaptive behavior did not require replacing the deterministic recommendation system.
-
-Instead, separating **recommendation** from **adaptation** made both components easier to reason about and test.
+The central reliability lesson was that adding adaptive behavior did not require replacing the deterministic engine. Separating **recommendation** from **adaptation** made both components easier to test.
 
 ---
 
 # Known Limitations
 
-Resonance remains a course-scale prototype rather than a production music platform.
+Resonance remains a course-scale prototype.
 
 Current limitations include:
 
-- A relatively small, hand-curated local song catalog
-- No direct music playback or streaming integration
-- No persistent user accounts or database-backed profiles
-- Preference adaptation is rule-based rather than learned from a large behavioral dataset
-- Recommendation quality depends heavily on the metadata available in the catalog
-- Some genres, eras, languages, artists, and listening styles are underrepresented
-- Listener feedback is limited to Like, Skip, and Replay
-- Session history is not retained after the active application session ends
-- Controlled randomness means two unseeded listening sessions may not present songs in the same order even when the underlying ranking is identical
+- a local, curated 210-song catalog rather than a production-scale catalog;
+- heuristic audio-feature metadata rather than a fully authoritative audio-analysis dataset;
+- no direct playback or streaming integration;
+- no persistent user accounts or database-backed profiles;
+- rule-based preference adaptation rather than learning from a large behavioral dataset;
+- incomplete representation across genres, eras, languages, regions, and artists;
+- feedback limited to Like, Skip, and Replay;
+- session history that ends with the active application session; and
+- controlled randomness that can produce different song sequences between unseeded sessions.
 
-These limitations are intentional and documented rather than hidden.
-
-They also identify clear opportunities for future development without compromising the reproducibility of the current system.
+These limitations are documented rather than hidden and provide clear directions for future development.
 
 ---
 
 # What I Learned
 
-Building Resonance v2.0 reinforced that an effective AI system is more than the model or algorithm responsible for producing an output.
+Building Resonance v2.0 reinforced that an applied AI system is more than the model or algorithm producing an output.
 
-The larger engineering challenge was designing the system around that intelligence:
+The engineering challenge involved:
 
-- determining what information should be remembered
-- deciding when evidence is strong enough to justify adaptation
-- preventing unstable profile changes
-- separating recommendation logic from agent reasoning
-- making decisions explainable to users
-- testing stateful behavior
-- managing randomness without losing reproducibility
-- presenting technical AI behavior through a usable interface
+- deciding what state should be remembered;
+- determining when feedback is strong enough to justify adaptation;
+- preventing unstable profile changes;
+- separating recommendation logic from agent behavior;
+- making both recommendations and adaptation explainable;
+- testing stateful workflows;
+- managing randomness without losing reproducibility; and
+- presenting technical AI behavior through a usable interface.
 
-The transition from Resonance v1.0 to v2.0 demonstrated how a deterministic prototype can evolve into a stateful applied AI system without discarding the reliable components that already work.
-
-The most important architectural lesson was simple:
+The most important architectural lesson was:
 
 > **The recommendation engine does not need to be the agent. It can be a tool the agent uses.**
 
-That separation became the foundation for Resonance's adaptive, explainable design.
-
 ---
-
-Continue to **Part 4** for the project roadmap, future enhancements, portfolio reflection, acknowledgements, and final project information.
 
 # Future Roadmap
 
-Resonance v2.0 establishes the foundation for an adaptive, explainable music recommendation system, but the current architecture was intentionally designed so that additional capabilities can be added without replacing the validated recommendation engine or ResonanceAgent.
-
-Future development could expand Resonance in several directions.
-
----
-
 ## External Music Catalog
 
-The current version uses a local CSV catalog to ensure deterministic, reproducible execution.
-
-A future version could introduce a catalog-provider abstraction:
+A future catalog-provider abstraction could support both the current CSV and an external music service:
 
 ```text
-                  Catalog Provider
-                        │
-              ┌─────────┴─────────┐
-              ▼                   ▼
-        Local CSV             Music API
+Catalog Provider
+      │
+  ┌───┴───┐
+  ▼       ▼
+Local    Music
+ CSV      API
 ```
 
-This would allow Resonance to retain its local catalog for testing while optionally retrieving songs from a larger external music service.
-
-Potential benefits include:
-
-- significantly larger music catalogs
-- international and foreign-language music
-- broader genre representation
-- richer song metadata
-- continuously updated releases
-- album artwork
-- preview or playback links where supported
-
-The recommendation engine would remain independent of the catalog source.
-
----
+Potential benefits include a much larger catalog, richer metadata, international music, new releases, artwork, and supported preview/playback links.
 
 ## Persistent Listener Profiles
 
-Resonance currently maintains listener state within the active Streamlit session.
+A future database layer such as PostgreSQL or Supabase could preserve:
 
-A future version could introduce persistent profile storage using a database platform such as PostgreSQL or Supabase.
-
-Persistent storage could retain:
-
-- listener accounts
-- profile preferences
-- feedback history
-- recommendation cycles
-- preference-drift history
-- previously recommended songs
-
-This would allow Resonance to continue learning from a listener across multiple sessions and devices.
-
----
-
-## Authentication
-
-Persistent profiles could eventually be paired with user authentication.
-
-A listener could:
-
-```text
-Sign In
-   │
-   ▼
-Load Existing Profile
-   │
-   ▼
-Resume Listening
-   │
-   ▼
-Continue Preference Adaptation
-```
-
-Authentication is intentionally outside the scope of the current project because it does not directly improve the core adaptive recommendation workflow.
-
----
+- listener accounts;
+- profile preferences;
+- feedback history;
+- recommendation cycles;
+- drift history; and
+- previously recommended songs.
 
 ## Expanded Feedback Signals
 
-The current agent learns from three explicit behaviors:
+Future behavioral signals could include:
 
-```text
-Like
-Skip
-Replay
-```
-
-A future system could incorporate additional signals such as:
-
-- listening duration
-- early skips
-- repeated plays
-- playlist additions
-- favorites
-- search behavior
-- manual ratings
-- artist follows
-- genre exploration
-- time-of-day listening patterns
-
-These signals could provide a richer picture of listener preferences without requiring users to manually configure every profile attribute.
-
----
+- listening duration;
+- early skips;
+- playlist additions;
+- favorites;
+- search behavior;
+- manual ratings;
+- artist follows; and
+- time-of-day patterns.
 
 ## Improved Diversity
 
-Resonance already includes artist-diversity behavior and session-level repeat avoidance.
+Future diversity controls could consider:
 
-Future versions could extend diversity controls across:
-
-- genre
-- decade
-- artist
-- language
-- popularity
-- geographic origin
-
-This could help reduce filter-bubble effects while still respecting listener preferences.
-
----
+- genre;
+- decade;
+- artist;
+- language;
+- popularity; and
+- geographic origin.
 
 ## Richer Preference Modeling
 
-The current preference model uses explicit, human-readable attributes such as:
+Future experiments could compare the current transparent baseline against:
 
-- genre
-- mood
-- tempo
-- valence
-- danceability
-- acoustic preference
-- decade
-- popularity
-
-This makes the system highly explainable.
-
-A future version could experiment with embeddings, collaborative filtering, or learned preference representations while retaining the current deterministic system as an explainable baseline.
-
-Such experimentation would allow comparison between:
-
-```text
-Transparent Rule-Based Recommendation
-
-vs.
-
-Learned Recommendation Models
-```
-
-rather than assuming that greater model complexity automatically produces a better system.
-
----
+- embeddings;
+- collaborative filtering; or
+- learned preference representations.
 
 ## Natural-Language Explanations
 
-The current system generates explanations directly from deterministic recommendation and adaptation logic.
-
-A future enhancement could optionally use a language model to translate structured explanation data into more conversational language.
-
-For example:
-
-```text
-Structured Agent Output
-
-tempo: +5 BPM
-valence: -0.05
-danceability: -0.05
-```
-
-could become:
-
-> Your recent feedback suggests that you're leaning toward faster, slightly darker, and less dance-oriented music. Resonance has adjusted your profile gradually while preserving your broader listening preferences.
-
-The language model would explain the decision rather than make the recommendation itself.
-
-This separation would preserve deterministic decision-making while improving communication with the listener.
+A future language model could translate deterministic structured explanations into more conversational wording while leaving recommendation decisions themselves deterministic.
 
 ---
 
 # Development Status
 
-Resonance v2.0 is currently feature-complete for the CodePath AI-110 final project.
-
-The project is under a feature freeze while final documentation, evaluation evidence, and presentation materials are completed.
+Resonance v2.0 is feature-complete for the CodePath AI-110 final project and is in final documentation/evaluation preparation.
 
 ### Completed
 
 - [x] Deterministic recommendation engine
 - [x] Explainable recommendation scoring
-- [x] Artist diversity behavior
+- [x] Artist-diversity behavior
+- [x] 210-song local catalog
 - [x] ResonanceAgent
 - [x] Listener feedback collection
 - [x] Bounded preference drift
@@ -1293,44 +953,38 @@ The project is under a feature freeze while final documentation, evaluation evid
 - [x] Recent-song avoidance
 - [x] Listener profile builder
 - [x] Interactive Streamlit application
-- [x] Automated recommendation tests
-- [x] Automated agent tests
-- [x] Automated song-selection tests
-- [x] Automated Streamlit interface tests
-- [x] 54-test automated test suite
+- [x] Final architecture diagram
+- [x] Final `model_card.md`
+- [x] Final `ai_interactions.md`
+- [x] 54-test automated suite
+- [x] Automated-test screenshot
+- [x] CLI verification screenshot
 
-### Finalization
+### Remaining Finalization
 
-- [ ] Final architecture diagram
-- [ ] Final `model_card.md`
-- [ ] Final `ai_interactions.md`
+- [ ] Final Streamlit verification screenshots
 - [ ] Final rubric audit
-- [ ] Reproducible execution evidence
-- [ ] Application screenshots
 - [ ] Presentation
 - [ ] Optional Loom walkthrough
+- [ ] Final release/tag preparation
 
 ---
 
 # Portfolio Reflection
 
-Resonance demonstrates my progression from building individual AI-related components to designing a complete applied AI system.
+Resonance demonstrates my progression from building an AI-related component to designing a complete applied AI system.
 
-The original Resonance project focused primarily on recommendation scoring: given a predefined listener profile and song catalog, the system calculated which songs best matched that profile.
+The original project asked:
 
-Resonance v2.0 required a different question:
+> **Which songs best match this predefined profile?**
+
+Resonance v2.0 adds a second question:
 
 > **What happens after the recommendation?**
 
-Answering that question led to the development of the ResonanceAgent and the recommendation-cycle architecture.
+The system now observes behavior, reasons about accumulated feedback, applies controlled preference drift, generates new recommendations, explains its decisions, and remembers previous cycles.
 
-Instead of treating listener preferences as static input, the system now observes behavior, reasons about accumulated feedback, applies controlled preference drift, generates new recommendations, explains its decisions, and remembers previous cycles.
-
-Developing Resonance reinforced the importance of separating concerns within AI systems. The deterministic recommendation engine remains responsible for scoring songs, while the agent is responsible for state, adaptation, orchestration, and history.
-
-That separation allowed the original validated system to remain intact while new capabilities were added around it.
-
-For me, Resonance represents an important shift from thinking primarily about **what an AI component can produce** to thinking about **how an AI system should behave over time**.
+For me, Resonance represents a shift from thinking primarily about **what an AI component can produce** to thinking about **how an AI system should behave over time**.
 
 ---
 
@@ -1338,144 +992,87 @@ For me, Resonance represents an important shift from thinking primarily about **
 
 Resonance v2.0 evolved from my original **CodePath AI-110 Module 3 music recommendation project, Resonance v1.0**.
 
-The original project remains available in its separate repository:
-
-**Original Repository:**  
+**Original repository:**  
 https://github.com/kj6gcs/ai110-module3show-musicrecommendersimulation-starter
 
-The original README has also been preserved in this repository:
+Historical artifacts are preserved in this repository:
 
-```text
-docs/README_v1.md
-```
-
-This provides a direct comparison between the original deterministic prototype and the final adaptive system.
-
----
-
-# AI-110 Final Project
-
-Resonance v2.0 was developed as the final **Show What You Know: Applied AI System** project for CodePath's AI-110: Foundations of AI Engineering course.
-
-The project extends concepts explored throughout the course, including:
-
-- debugging and system design
-- structured reasoning
-- AI-assisted development
-- agentic workflows
-- reliability testing
-- explainability
-- responsible AI
-- evaluation
-- technical communication
-
-The final project challenged students to evolve an earlier prototype into a cohesive, reliable, and professionally documented applied AI system.
+- [`docs/README_v1.md`](docs/README_v1.md)
+- [`docs/model_card_v1.md`](docs/model_card_v1.md)
+- [`docs/ai_interactions_v1.md`](docs/ai_interactions_v1.md)
+- [`docs/songs_v1_60.csv`](docs/songs_v1_60.csv)
 
 ---
 
 # AI-Assisted Development
 
-Generative AI tools were used throughout the development of Resonance as engineering collaborators.
+Generative AI tools were used as engineering collaborators for:
 
-AI assistance supported activities including:
+- architecture discussion;
+- codebase review;
+- implementation planning;
+- code generation;
+- test design;
+- debugging;
+- design critique;
+- documentation; and
+- technical review.
 
-- architectural brainstorming
-- codebase review
-- implementation planning
-- code generation
-- automated test design
-- debugging
-- design critique
-- documentation planning
-- technical review
+AI suggestions were reviewed rather than accepted automatically. Several proposals were modified, deferred, or rejected when they introduced unnecessary complexity, conflicted with the intended product experience, or expanded beyond project scope.
 
-AI-generated suggestions were reviewed rather than treated as automatically correct.
+See:
 
-Several proposed approaches were modified, postponed, or rejected when they introduced unnecessary complexity, conflicted with the intended architecture, or expanded the project beyond its core requirements.
-
-A detailed discussion of AI collaboration—including helpful and flawed AI suggestions—is documented in:
-
-```text
-model_card.md
-```
-
-Development interactions are additionally documented in:
-
-```text
-ai_interactions.md
-```
+- [`model_card.md`](model_card.md) for responsible-AI and collaboration reflection;
+- [`ai_interactions.md`](ai_interactions.md) for representative development traces.
 
 ---
 
 # Responsible AI
 
-Resonance was designed around several responsible-AI principles:
+Resonance emphasizes:
 
 ### Transparency
 
-Recommendation and adaptation decisions are exposed rather than hidden behind an opaque model.
+Recommendation and adaptation logic remain inspectable.
 
 ### Stability
 
-Listener profiles change gradually through bounded preference drift rather than reacting dramatically to isolated interactions.
+Profiles change gradually through bounded preference drift.
 
 ### Human Control
 
-The listener remains the source of behavioral feedback and can inspect how that feedback affects the active profile.
+Listener feedback drives adaptation, and changes remain visible.
 
 ### Reproducibility
 
-The local catalog and deterministic recommendation engine allow core recommendation behavior to be reproduced without relying on external AI services.
+The local catalog and deterministic engine allow core behavior to be reproduced without external AI services.
 
 ### Bias Awareness
 
-The system explicitly acknowledges limitations caused by catalog size, metadata selection, genre representation, and manually designed scoring rules.
+The system documents limitations related to catalog composition, metadata, genre representation, and hand-designed scoring rules.
 
-A more complete discussion of limitations, bias, misuse, testing observations, and responsible AI is available in [`model_card.md`](model_card.md).
+See [`model_card.md`](model_card.md) for the complete responsible-AI discussion.
 
 ---
 
 # Repository Documentation
 
-Additional project documentation is available throughout the repository.
-
-| File                                     | Purpose                                                                            |
-| ---------------------------------------- | ---------------------------------------------------------------------------------- |
-| `README.md`                              | Main project documentation                                                         |
-| `model_card.md`                          | Responsible AI, limitations, testing observations, and AI-collaboration reflection |
-| `ai_interactions.md`                     | Record of AI-assisted development interactions                                     |
-| `changelog.md`                           | Development history and major project changes                                      |
-| `diagrams/resonance_v2_architecture.mmd` | Mermaid source for the final system architecture                                   |
-| `docs/README_v1.md`                      | Archived documentation from Resonance v1.0                                         |
-
----
-
-# Contributing
-
-Resonance is currently an educational and portfolio project rather than an actively maintained community project.
-
-However, suggestions, bug reports, and constructive feedback are welcome through GitHub Issues.
-
-If extending the project, please preserve the separation between:
-
-```text
-Agent Reasoning
-Recommendation Logic
-Catalog Access
-User Interface
-```
-
-Keeping these responsibilities independent is a core design principle of Resonance.
+| File                                                                             | Purpose                                                                            |
+| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [`README.md`](README.md)                                                         | Main project documentation                                                         |
+| [`model_card.md`](model_card.md)                                                 | Responsible AI, limitations, testing observations, and AI-collaboration reflection |
+| [`ai_interactions.md`](ai_interactions.md)                                       | AI-assisted development log and agentic workflow evidence                          |
+| [`changelog.md`](changelog.md)                                                   | Development and release history                                                    |
+| [`diagrams/resonance_v2_architecture.md`](diagrams/resonance_v2_architecture.md) | Final Mermaid system architecture                                                  |
+| [`docs/README_v1.md`](docs/README_v1.md)                                         | Archived Resonance v1.0 README                                                     |
 
 ---
 
 # License
 
-This project is released under the terms of the license included in this repository.
+Resonance is released under the MIT License.
 
-See [`LICENSE`](LICENSE) for details.
-
-> **Note:** If no `LICENSE` file is currently present in the repository, add an appropriate license before publishing or remove this section.
+See [`LICENSE`](LICENSE).
 
 ---
 
@@ -1483,11 +1080,11 @@ See [`LICENSE`](LICENSE) for details.
 
 Resonance was developed as part of **CodePath AI-110: Foundations of AI Engineering**.
 
-Special thanks to:
+Thanks to:
 
-- **CodePath** for the AI-110 curriculum, project framework, and development resources.
-- The open-source Python, Streamlit, and pytest communities for the tools used to build and test the application.
-- Generative AI tools used as development collaborators throughout the project's design, implementation, review, and documentation process.
+- **CodePath** for the curriculum, project framework, and development resources;
+- the Python, Streamlit, and pytest communities; and
+- generative AI tools used as development collaborators throughout design, implementation, review, testing, and documentation.
 
 ---
 
