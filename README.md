@@ -4,8 +4,13 @@
 
 [![Python](https://img.shields.io/badge/Python-3.13+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![Pytest](https://img.shields.io/badge/Tested%20with-Pytest-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org/)
+[![Pytest](https://img.shields.io/badge/Tests-54%20Passing-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+
+[![Model Card](https://img.shields.io/badge/Model_Card-Responsible_AI-purple?style=flat-square)](model_card.md)
+[![AI Interactions](https://img.shields.io/badge/AI_Interactions-Development_Log-blue?style=flat-square)](ai_interactions.md)
+[![Changelog](https://img.shields.io/badge/Changelog-Version_History-orange?style=flat-square)](changelog.md)
+[![Architecture](https://img.shields.io/badge/Architecture-Mermaid_Diagram-teal?style=flat-square)](diagrams/resonance_v2_architecture.mmd)
 
 ---
 
@@ -623,12 +628,12 @@ Example result:
 
 The test suite is divided across four primary components:
 
-| Test Module | Purpose |
-|-------------|---------|
-| `tests/test_recommender.py` | Validates scoring, ranking, explanations, catalog loading, diversity behavior, and regression outputs |
-| `tests/test_agent.py` | Validates feedback handling, preference drift, recommendation cycles, configuration, history, and agent behavior |
-| `tests/test_song_selection.py` | Validates controlled random selection, candidate weighting, repeat avoidance, and fallback behavior |
-| `tests/test_app.py` | Validates the Streamlit user flow, profile creation, feedback controls, cycle advancement, and visible preference drift |
+| Test Module                    | Purpose                                                                                                                 |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `tests/test_recommender.py`    | Validates scoring, ranking, explanations, catalog loading, diversity behavior, and regression outputs                   |
+| `tests/test_agent.py`          | Validates feedback handling, preference drift, recommendation cycles, configuration, history, and agent behavior        |
+| `tests/test_song_selection.py` | Validates controlled random selection, candidate weighting, repeat avoidance, and fallback behavior                     |
+| `tests/test_app.py`            | Validates the Streamlit user flow, profile creation, feedback controls, cycle advancement, and visible preference drift |
 
 This layered approach allows failures to be isolated to the recommendation engine, agent, selection layer, or user interface rather than treating the application as a single black box.
 
@@ -678,14 +683,14 @@ Instead, the agent waits for multiple feedback events before applying preference
 
 Default adaptation settings include:
 
-| Setting | Default |
-|---------|---------|
-| Minimum feedback before drift | 3 events |
-| Categorical shift threshold | 3 supporting events |
-| Maximum tempo adjustment | 5 BPM |
-| Maximum valence adjustment | 0.05 |
-| Maximum danceability adjustment | 0.05 |
-| Maximum decade adjustment | 5 years |
+| Setting                         | Default             |
+| ------------------------------- | ------------------- |
+| Minimum feedback before drift   | 3 events            |
+| Categorical shift threshold     | 3 supporting events |
+| Maximum tempo adjustment        | 5 BPM               |
+| Maximum valence adjustment      | 0.05                |
+| Maximum danceability adjustment | 0.05                |
+| Maximum decade adjustment       | 5 years             |
 
 These limits are represented through the agent's configuration rather than being embedded throughout the recommendation logic.
 
@@ -1434,14 +1439,14 @@ A more complete discussion of limitations, bias, misuse, testing observations, a
 
 Additional project documentation is available throughout the repository.
 
-| File | Purpose |
-|------|---------|
-| `README.md` | Main project documentation |
-| `model_card.md` | Responsible AI, limitations, testing observations, and AI-collaboration reflection |
-| `ai_interactions.md` | Record of AI-assisted development interactions |
-| `changelog.md` | Development history and major project changes |
-| `diagrams/resonance_v2_architecture.mmd` | Mermaid source for the final system architecture |
-| `docs/README_v1.md` | Archived documentation from Resonance v1.0 |
+| File                                     | Purpose                                                                            |
+| ---------------------------------------- | ---------------------------------------------------------------------------------- |
+| `README.md`                              | Main project documentation                                                         |
+| `model_card.md`                          | Responsible AI, limitations, testing observations, and AI-collaboration reflection |
+| `ai_interactions.md`                     | Record of AI-assisted development interactions                                     |
+| `changelog.md`                           | Development history and major project changes                                      |
+| `diagrams/resonance_v2_architecture.mmd` | Mermaid source for the final system architecture                                   |
+| `docs/README_v1.md`                      | Archived documentation from Resonance v1.0                                         |
 
 ---
 
@@ -1513,4 +1518,4 @@ It is to create an ongoing, transparent interaction in which the recommendation 
 ---
 
 **Resonance v2.0**  
-*An Adaptive, Explainable Music Recommendation Agent*
+_An Adaptive, Explainable Music Recommendation Agent_

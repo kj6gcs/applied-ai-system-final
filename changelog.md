@@ -1,128 +1,193 @@
 # Change Log
 
+[README](README.md) •
+[Model Card](model_card.md) •
+[AI Interactions](ai_interactions.md) •
+[Changelog](changelog.md) •
+[Architecture](diagrams/resonance_v2_architecture.mmd) •
+[License](LICENSE)
+
+---
+
 ## Resonance v2.0
 
 ### Applied AI Final Project
 
-## [2.0.0-alpha.4] - 2026-07-31
+> Resonance v2.0 evolves the original deterministic music recommender into a stateful, adaptive recommendation agent that learns from listener feedback while preserving the transparent scoring engine developed in v1.0.
+
+## [2.0.0-beta.1] - 2026-08-01
+
+### Added
+
+- Added a complete Resonance v2.0 `README.md` covering project purpose, the v1.0 foundation, architecture, setup, listener workflow, recommendation logic, adaptive behavior, reliability, responsible-AI considerations, and portfolio context.
+- Added a dedicated Resonance v2.0 `model_card.md` covering intended use, limitations and biases, misuse and safeguards, reliability findings, and human-AI collaboration.
+- Rebuilt `ai_interactions.md` as a v2.0 development log documenting representative ChatGPT and Claude Code collaboration, architectural decisions, agentic development traces, verification milestones, and AI suggestions that were accepted, modified, rejected, or deferred.
+- Added an MIT `LICENSE`.
+- Added consistent navigation among the README, model card, AI interaction log, changelog, architecture source, and license.
+- Added documentation badges/links near the top of the README.
+- Preserved original Resonance v1.0 documentation under `docs/`, including historical README, model-card, and AI-interaction artifacts.
+
+### Changed
+
+- Reworked root-level documentation to describe Resonance v2.0 while preserving Module 1–3 materials as historical references.
+- Expanded documentation of bounded preference drift, listener feedback, explainability, testing, guardrails, and human review of AI-assisted development.
+- Documented the decision to defer persistent user accounts/database storage and a live external music API beyond the current course-project scope.
+
+### Verified
+
+- Current implementation milestone remains **54 automated tests passing**.
+- No recommendation-engine, agent, song-selection, or Streamlit behavior was intentionally changed during this documentation milestone.
+- Final `2.0.0` release remains pending completion of the v2 architecture diagram, reproducible execution evidence, final test run, and rubric audit.
+
+---
+
+## [2.0.0-alpha.5] - 2026-07-31
 
 ### Added
 
 - Introduced a two-stage Streamlit interface consisting of listener profile setup and a continuous listening session.
 - Added quick-start listening presets alongside a fully customizable profile builder.
-- Added `song_selection.py` to provide weighted candidate selection while preserving the existing recommendation engine.
+- Added `src/song_selection.py` for weighted candidate selection while preserving the existing recommendation engine.
 - Added repeat avoidance using a rolling history of recently recommended songs.
 - Added listener-friendly recommendation explanations with technical scoring details available through an expandable panel.
-- Added real-time recommendation cycle tracking, including feedback progress toward profile adaptation.
-- Added preference drift notifications describing how listener feedback influenced future recommendations.
-- Added comprehensive Streamlit UI tests and song selection tests.
+- Added real-time recommendation-cycle tracking and preference-drift notifications.
+- Added `tests/test_song_selection.py` and `tests/test_app.py`.
 
 ### Changed
 
-- Redesigned the application from an engineering demonstration into an interactive music recommendation experience.
-- Recommendations are now presented one song at a time instead of as a static ranked list.
-- User feedback now advances the listening session while allowing the ResonanceAgent to continuously refine the active listener profile.
-- Moved raw profile data, technical history, and diagnostic information into an Advanced AI Details panel to improve usability while preserving transparency.
+- Redesigned the application from an engineering-oriented demonstration into an interactive music recommendation experience.
+- Recommendations are now presented one song at a time.
+- Like, Skip, and Replay feedback advances the listening session while allowing the `ResonanceAgent` to refine the active profile in recommendation cycles.
+- Moved raw profile data, technical history, and diagnostics into an **Advanced AI Details** panel.
+- Added weighted random selection among highly ranked candidates so strong matches remain favored without always showing the same top result.
+- Kept scoring and ranking inside the validated recommendation engine; the selection layer only chooses among already-ranked candidates.
 
 ### Verified
 
-- All 54 automated tests pass successfully.
-- Streamlit interface verified through automated AppTest testing and manual execution.
-- Existing CLI behavior and deterministic recommendation engine remain unchanged.
+- All **54 automated tests** pass successfully.
+- Streamlit was verified through automated `AppTest` coverage and manual execution.
+- Feedback applies to the active song and advances the listening session.
+- Three feedback events trigger the next recommendation cycle under the default configuration.
+- Existing CLI and deterministic recommendation-engine behavior remain unchanged.
+
+---
+
+## [2.0.0-alpha.4] - 2026-07-31
+
+### Added
+
+- Added the first Streamlit graphical interface for Resonance v2.0.
+- Added displays for the current profile, recommendations, scores, explanations, recommendation cycles, preference drift, quality information, and agent history.
+- Added Like, Skip, and Replay controls connected directly to the `ResonanceAgent`.
+- Added `Recommender.score()` so the UI could display scores through the existing scoring engine.
+- Added two focused recommender tests for the new score accessor.
+
+### Changed
+
+- Added Streamlit as a second application entry point while preserving the CLI.
+- Kept the UI as a composition/presentation layer rather than duplicating recommendation or adaptation logic.
+- Added defensive project-path handling after Streamlit `AppTest` exposed an import-context issue.
+
+### Verified
+
+- All **40 automated tests** pass successfully.
+- Streamlit behavior was verified with `AppTest` and a real server smoke test returning HTTP 200.
+- Existing CLI output remained unchanged.
+- Manual review found that this first interface behaved more like an engineering dashboard than the intended listener-facing recommender, directly motivating `2.0.0-alpha.5`.
+
+---
 
 ## [2.0.0-alpha.3] - 2026-07-31
 
 ### Added
 
-- Added `AgentConfig`, a small configuration dataclass exposing the `ResonanceAgent`'s preference-drift tuning knobs (`min_feedback_for_drift`, `categorical_shift_threshold`, `max_tempo_step`, `max_valence_step`, `max_danceability_step`, `max_decade_step`) instead of hard-coded constants.
-- Added 4 focused tests confirming: default configuration preserves prior behavior, a custom `min_feedback_for_drift` changes when drift begins, a custom numeric max step changes the bounded update amount, and a custom categorical threshold changes when a categorical preference shifts.
+- Added `AgentConfig` with configurable preference-drift parameters:
+  - `min_feedback_for_drift`
+  - `categorical_shift_threshold`
+  - `max_tempo_step`
+  - `max_valence_step`
+  - `max_danceability_step`
+  - `max_decade_step`
+- Added four focused tests confirming that defaults preserve prior behavior and custom thresholds/step sizes measurably change adaptation behavior.
 
 ### Changed
 
-- `ResonanceAgent` now accepts an optional `config: AgentConfig` parameter in its constructor; omitting it preserves the exact prior tuning behavior.
+- `ResonanceAgent` now accepts an optional `config: AgentConfig` constructor parameter.
+- Replaced hard-coded adaptation thresholds with configuration values while preserving identical defaults.
 
 ### Verified
 
 - All **38 automated tests** pass successfully.
-- Existing recommendation-engine behavior, CLI output, and the public agent interface (`observe_feedback()`, `run_cycle()`, `get_profile()`, `get_history()`) remain unchanged.
+- Recommendation-engine behavior and CLI output remain unchanged.
+- The public agent interface remains `observe_feedback()`, `run_cycle()`, `get_profile()`, and `get_history()`.
+
+---
 
 ## [2.0.0-alpha.2] - 2026-07-31
 
 ### Added
 
-- Added the initial implementation of the **ResonanceAgent**, the adaptive AI layer responsible for observing listener feedback, detecting preference drift, updating listener profiles, and orchestrating the existing recommendation engine.
-- Added support for listener feedback events, including **likes**, **skips**, and **replays**.
-- Added bounded, evidence-based **preference drift**, allowing listener profiles to evolve gradually through repeated interactions rather than reacting dramatically to a single event.
-- Added recommendation-cycle history that records profile snapshots, feedback received, recommendations generated, explanation summaries, and quality warnings for future explainability and evaluation.
-- Added a second explainability layer that communicates **why recommendations changed** between recommendation cycles while preserving the recommendation engine's existing per-song explanations.
-- Added basic recommendation quality checks to detect empty recommendation lists, repeated artists, and excessive genre dominance.
-- Added `tests/test_agent.py` with comprehensive automated tests covering feedback validation, preference drift, recommendation delegation, recommendation history, explainability, and quality checks.
+- Added the initial **ResonanceAgent**, responsible for observing listener feedback, detecting preference drift, updating listener profiles, and orchestrating the existing recommendation engine.
+- Added Like, Skip, and Replay feedback events.
+- Added bounded, evidence-based preference drift.
+- Added recommendation-cycle history containing profile snapshots, feedback, recommendations, explanations, and quality warnings.
+- Added a second explainability layer describing **why recommendations changed** between cycles.
+- Added quality checks for empty recommendation lists, repeated artists, and excessive genre dominance.
+- Added `tests/test_agent.py` covering feedback validation, preference drift, recommendation delegation, history, explainability, defensive-copy behavior, deterministic cycles, and quality checks.
 
 ### Changed
 
-- Expanded Resonance from a static recommendation engine into a stateful, adaptive **agentic AI system** centered around the `ResonanceAgent`.
-- Introduced a simplified public agent interface consisting of:
+- Expanded Resonance from a static recommender into a stateful, adaptive **agentic AI system**.
+- Introduced the public agent interface:
   - `observe_feedback()`
   - `run_cycle()`
   - `get_profile()`
   - `get_history()`
-- Preserved the existing deterministic recommendation engine as a validated service used by the agent rather than replacing or modifying its scoring algorithm.
+- Preserved the deterministic recommendation engine as a validated service used by the agent rather than replacing its scoring algorithm.
 
 ### Verified
 
 - All **34 automated tests** pass successfully.
-- Existing command-line interface (CLI) behavior remains fully compatible with Resonance v1.0.
-- Existing recommendation scores, rankings, explanations, diversity behavior, and CSV catalog remain unchanged following the introduction of the ResonanceAgent.
+- Existing CLI behavior remains compatible with Resonance v1.0.
+- Existing recommendation scores, rankings, explanations, diversity behavior, and catalog remain unchanged.
 
-## [2.0.0-alpha.1] - 07-31-2026
+---
 
-### Changed
-
-- Refactored the recommendation engine to eliminate duplicate implementations while preserving the validated scoring algorithm.
-- Unified the object-oriented API with the existing recommendation logic, creating a single recommendation engine used throughout the application.
-- Replaced diagnostic `print()` statements with structured logging to improve maintainability and debugging.
-- Expanded the automated test suite from 2 to 19 tests, including regression tests based on documented recommendation outputs.
-- Added regression testing to verify recommendation behavior remains consistent during future development.
-- Improved project architecture in preparation for adaptive recommendation features planned for Resonance v2.0.
-
-### Verified
-
-- Existing recommendation scores, rankings, and explanations remain unchanged following the Phase 1 refactor.
-- Command-line interface behavior remains fully compatible with Resonance v1.0.
-- All automated tests pass successfully.
-
-### Next
-
-- Design and implement the Resonance Agent.
-- Add adaptive listener behavior (likes, skips, and replay events).
-- Introduce recommendation explainability, confidence scoring, and reliability evaluation.
-- Develop the Streamlit user interface.
-
-## [2.0.0] - 2026-07-31
-
-### Changed
-
-- Forked Resonance v1.0 into a dedicated final-project repository to preserve the original implementation while enabling iterative development.
-- Reorganized project assets to align with AI-110 final project requirements, including a dedicated `diagrams/` directory for Mermaid architecture diagrams.
-- Updated project configuration and dependencies, including correcting package requirements and improving virtual environment exclusions in `.gitignore`.
-- Began redesigning Resonance as an adaptive AI system centered around an agentic workflow rather than a static recommendation engine.
-
-### Planned
-
-- Implement a behavioral recommendation agent that adapts user preferences based on simulated listening behavior (likes, skips, and replays).
-- Introduce recommendation diversity reranking to reduce artist and genre repetition.
-- Add explainable recommendation reasoning, confidence scoring, logging, guardrails, and automated evaluation.
-- Expand documentation, architecture diagrams, and model card to reflect the redesigned system.
+## [2.0.0-alpha.1] - 2026-07-31
 
 ### Added
 
-- Adaptive listener-feedback agent
-- Like, skip, and replay behavior tracking
-- Preference-profile updates
-- Recommendation reliability evaluation
-- Expanded diversity reranking
-- Streamlit user interface
-- Structured logging and guardrails
+- Forked Resonance v1.0 into a dedicated final-project repository to preserve the original implementation while enabling v2.0 development.
+- Added a dedicated `diagrams/` directory for Mermaid architecture sources.
+- Preserved the original architecture diagram as historical v1.0 documentation.
+- Added structured logging through `src/logging_config.py`.
+- Expanded the test suite from 2 tests to **19 meaningful recommendation-engine tests**, including regression tests based on documented v1.0 outputs.
+
+### Changed
+
+- Corrected project dependency/configuration issues discovered during setup.
+- Improved virtual-environment exclusions in `.gitignore`.
+- Refactored the recommendation engine to eliminate disconnected real/stub behavior while preserving the validated scoring algorithm.
+- Unified the object-oriented `Recommender` API with the real functional recommendation logic.
+- Replaced diagnostic `print()` calls with structured logging.
+- Reworked tests so they exercise the recommendation logic actually used by the application.
+- Began redesigning Resonance around an agentic workflow rather than a static recommendation engine.
+
+### Verified
+
+- Existing recommendation scores, rankings, and explanations remain unchanged.
+- CLI behavior remains compatible with Resonance v1.0.
+- All **19 automated tests** pass successfully.
+
+### Planned at This Milestone
+
+- Implement the behavioral recommendation agent.
+- Add bounded preference drift and cycle history.
+- Add explainability and recommendation-quality checks.
+- Develop the Streamlit interface.
+- Expand final-project testing and documentation.
+
+---
 
 ## Resonance v1.0
 
@@ -220,3 +285,5 @@
 
 - Optional stretch goal — easier-to-read output: instead of printing each recommendation as a few lines of plain text, results now show up in a clean, aligned table with columns for rank, title, artist, score, and the reasons behind the score.
   - Re-ran everything and updated the README to show both the old-style output and the new table side by side, so it's easy to see the improvement.
+
+← [Back to Resonance](README.md)
