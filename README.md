@@ -1249,3 +1249,27 @@ It is to create an ongoing, transparent interaction in which the recommendation 
 
 **Resonance v2.0**  
 _An Adaptive, Explainable Music Recommendation Agent_
+
+---
+
+## Portfolio Artifact
+
+**GitHub Repository:** [Resonance v2.0](YOUR-GITHUB-REPOSITORY-URL)
+
+### What This Project Says About Me as an AI Engineer
+
+Resonance reflects my approach to AI engineering as a combination of experimentation, transparency, reliability, and human oversight. I began with a relatively simple deterministic recommendation system and expanded it into an adaptive system that can observe listener feedback, reason about accumulated evidence, make bounded changes to a user profile, and explain why its behavior changed.
+
+Throughout development, I used generative AI as both a development tool and a learning resource, but I also independently tested its suggestions, identified incorrect or incomplete AI-generated code, and made corrections based on observed system behavior. This project reinforced for me that effective AI engineering is not simply about making a system more autonomous; it is about building systems whose behavior can be understood, tested, evaluated, and improved.
+
+---
+
+## Navigation
+- [`README.md`](README.md) — project overview, setup, architecture, usage, testing, and reproducible execution evidence
+- [`ai_interactions.md`](ai_interactions.md) — AI-assisted development interactions and reasoning traces
+- [`changelog.md`](changelog.md) — development history
+- [`diagrams/resonance_v2_architecture.md`](diagrams/resonance_v2_architecture.md) — final Mermaid architecture source
+- [`docs/model_card_v1.md`](docs/model_card_v1.md) — archived Resonance v1.0 model card
+- [`docs/README_v1.md`](docs/README_v1.md) — archived Resonance v1.0 README
+
+← [Back to Resonance](README.md)

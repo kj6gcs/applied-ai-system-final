@@ -15,6 +15,39 @@
 
 > Resonance v2.0 evolves the original deterministic music recommender into a stateful, adaptive recommendation agent that learns from listener feedback while preserving the transparent scoring engine developed in v1.0.
 
+## [2.0.0] - 2026-08-02
+
+### Added
+
+- Added `evaluation.py`, a standalone system-level evaluation harness that exercises the real Resonance recommendation engine, adaptive agent, and 210-song catalog.
+- Added five reproducible evaluation scenarios covering:
+  - static recommendation behavior;
+  - conflicting-preference fallback;
+  - bounded preference drift;
+  - invalid feedback rejection; and
+  - recommendation-quality warning detection.
+- Added PASS / FAIL reporting and process exit codes to the evaluation harness for automated verification.
+- Added final evaluation evidence showing all **5 of 5 system-level scenarios passing**.
+- Added the required portfolio artifact section to `README.md`, including the public GitHub repository link and a reflection on what Resonance demonstrates about my development as an AI engineer.
+- Added final reliability and evaluation details to the Resonance v2.0 architecture documentation.
+
+### Changed
+
+- Expanded `README.md` with final reproducible execution evidence for end-to-end behavior, adaptive-agent behavior, reliability mechanisms, and the system-level evaluation harness.
+- Expanded `ai_interactions.md` to document the AI-assisted evaluation-harness development process, including the implementation error discovered during manual verification and the subsequent correction.
+- Updated `model_card.md` with final testing, evaluation, limitations, and AI-collaboration documentation.
+- Updated the Resonance v2.0 architecture diagram to include `evaluation.py` as part of the Reliability & Evaluation layer.
+- Moved supplementary testing and Streamlit screenshots from `docs/images/` to the repository-level `assets/` directory for clearer project organization.
+
+### Verified
+
+- `python evaluation.py` — **5/5 evaluation scenarios passed** with `Overall result: PASS`.
+- Evaluation harness returned process exit code **0**.
+- `python -m pytest tests/ -v` — **54/54 tests passed**.
+- Static CLI recommendation behavior remained reproducible against the final 210-song catalog.
+- Streamlit end-to-end adaptive behavior was manually verified through multiple feedback cycles.
+- Existing recommendation-engine and adaptive-agent behavior remained unchanged by the addition of the evaluation harness.
+
 ## [2.0.0-beta.2] - 08-01-2026
 
 ### Expanded Song Catalog
