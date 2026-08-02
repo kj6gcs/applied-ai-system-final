@@ -1254,7 +1254,7 @@ _An Adaptive, Explainable Music Recommendation Agent_
 
 ## Portfolio Artifact
 
-**GitHub Repository:** [Resonance v2.0](YOUR-GITHUB-REPOSITORY-URL)
+**GitHub Repository:** [Resonance v2.0](https://github.com/kj6gcs/applied-ai-system-final)
 
 ### What This Project Says About Me as an AI Engineer
 
