@@ -391,12 +391,22 @@ The selection layer does **not** calculate scores or change rankings; it only ch
 applied-ai-system-final/
 │
 ├── app.py
+├── evaluation.py
 ├── README.md
 ├── model_card.md
 ├── changelog.md
 ├── ai_interactions.md
 ├── LICENSE
 ├── requirements.txt
+│
+├── assets/
+│   ├── automated_pytest_results.png
+│   ├── cli_static_profile_test.png
+│   ├── evaluation_py_test.png
+│   ├── streamlit_agent_profile.png
+│   ├── streamlit_cycle_history.png
+│   ├── streamlit_listener_interface.png
+│   └── streamlit_profile_drift.png
 │
 ├── data/
 │   └── songs.csv
@@ -409,13 +419,7 @@ applied-ai-system-final/
 │   ├── README_v1.md
 │   ├── model_card_v1.md
 │   ├── ai_interactions_v1.md
-│   ├── songs_v1_60.csv
-│   └── images/
-│       ├── automated_pytest_results.png
-│       ├── cli_static_profile_test.png
-│       ├── streamlit_listener_interface.png
-│       ├── streamlit_profile_drift.png
-│       └── streamlit_agent_details.png
+│   └── songs_v1_60.csv
 │
 ├── src/
 │   ├── agent.py
@@ -431,7 +435,83 @@ applied-ai-system-final/
     └── test_song_selection.py
 ```
 
-The Streamlit screenshot filenames shown above are reserved for final verification evidence and may be added during the final testing pass.
+---
+
+# Reproducible Example Interactions
+
+The examples below come from actual final verification runs against the 210-song catalog and are included as fenced input/output evidence.
+
+## Example 1 — Static Rock Profile
+
+```text
+INPUT
+
+genre: rock
+mood: intense
+tempo_bpm: 115
+valence: 0.55
+danceability: 0.55
+likes_acoustic: false
+
+OUTPUT
+
+1. Back In Black — AC/DC — 5.38
+2. Storm Runner — Voltline — 5.18
+3. Dreams — Fleetwood Mac — 4.44
+4. Carry on Wayward Son — Kansas — 4.38
+5. More Than a Feeling — Boston — 4.36
+```
+
+## Example 2 — Conflicting Preferences
+
+```text
+INPUT
+
+genre: metal
+mood: peaceful
+tempo_bpm: 170
+valence: 0.85
+danceability: 0.85
+likes_acoustic: true
+
+OUTPUT
+
+1. The Trooper — Iron Maiden — 3.52
+2. Paranoid — Black Sabbath — 3.50
+3. Duality — Slipknot — 3.34
+4. Master of Puppets — Metallica — 3.26
+5. Chop Suey! — System of a Down — 3.23
+```
+
+This intentionally conflicting profile demonstrates that Resonance returns the strongest available partial matches instead of failing when no song satisfies every requested characteristic.
+
+## Example 3 — Adaptive Agent Cycle
+
+```text
+INPUT
+
+3 liked/replayed songs
+average tempo_bpm: 125.0
+average valence: 0.67
+average danceability: 0.48
+average release decade: 1976.67
+3/3 songs matched prefers_mainstream_hits = true
+
+BEHAVIOR
+
+ResonanceAgent evaluates the accumulated evidence and applies
+bounded preference drift using AgentConfig.
+
+OUTPUT
+
+target_tempo: 120 → 125
+target_valence: 0.60 → 0.65
+target_danceability: 0.60 → 0.55
+target_decade: 1980 → 1977
+prefers_mainstream_hits: false → true
+```
+
+This observed Cycle #2 example demonstrates both bounded numeric drift and an evidence-thresholded categorical/Boolean preference shift.
 
 ---
 
@@ -466,11 +546,58 @@ The final verification run executed **54 automated tests** covering:
 
 Final result: **54 of 54 tests passed.**
 
-![Resonance automated test suite showing 54 passing tests](docs/images/automated_pytest_results.png)
+![Resonance automated test suite showing 54 passing tests](assets/automated_pytest_results.png)
 
 _Final automated verification run confirming all 54 tests pass successfully._
 
 ---
+
+## System Evaluation Harness
+
+Resonance includes a separate system-level evaluation harness in addition to the pytest suite.
+
+Run:
+
+```bash
+python evaluation.py
+```
+
+The harness evaluates five predefined scenarios against the real recommendation engine, `ResonanceAgent`, and 210-song catalog:
+
+1. static rock recommendation baseline;
+2. conflicting-preference fallback;
+3. bounded preference drift;
+4. invalid feedback rejection; and
+5. recommendation-quality warning detection.
+
+The final verification run produced:
+
+```text
+[PASS] Static rock profile
+       Top result: Back In Black — AC/DC
+[PASS] Conflicting preference fallback
+       Returned 5 recommendations
+[PASS] Bounded preference drift
+       target_tempo drifted 100 -> 105.0 (max step 5.0)
+[PASS] Invalid feedback rejection
+       Rejected as expected: Unknown feedback event_type: 'love'
+[PASS] Recommendation quality warning
+       Duplicate artists appear in the recommendation list.
+
+Resonance Evaluation Summary
+============================
+Passed: 5
+Failed: 0
+Total:  5
+
+Overall result: PASS
+```
+
+The script also returned exit code `0`, confirming that all predefined evaluation scenarios completed successfully.
+
+![Resonance system evaluation harness showing 5 of 5 scenarios passing](assets/evaluation_py_test.png)
+
+_Final system-level evaluation run confirming all five predefined acceptance scenarios pass successfully._
 
 ## Static CLI Profile Test
 
@@ -494,7 +621,7 @@ For the documented static rock-oriented profile, the top five were:
 
 Each recommendation also included an explanation identifying the scoring factors that contributed to its ranking.
 
-![Resonance CLI static profile recommendation test](docs/images/cli_static_profile_test.png)
+![Resonance CLI static profile recommendation test](assets/cli_static_profile_test.png)
 
 _Final CLI verification showing ranked recommendations and explainable scoring for the documented static profile._
 
@@ -522,7 +649,7 @@ The session verified the complete listener feedback loop:
 
 **Listener interaction → feedback collection → agent reasoning → bounded profile adaptation → new recommendations → explanation → cycle history**
 
-![Resonance listener interface](docs/images/streamlit_listener_interface.png)
+![Resonance listener interface](assets/streamlit_listener_interface.png)
 
 _The listener-facing Streamlit interface presents one recommendation at a time and allows the listener to Like, Skip, or Replay it._
 
@@ -547,7 +674,7 @@ Shifted prefers_mainstream_hits from False to True
 after 3 liked/replayed song(s) matching True
 ```
 
-![Observed Resonance preference drift](docs/images/streamlit_profile_drift.png)
+![Observed Resonance preference drift](assets/streamlit_profile_drift.png)
 
 _Observed preference drift after accumulated listener feedback triggered a new recommendation cycle._
 
@@ -579,7 +706,7 @@ target_mood_tag: ambition
 prefers_mainstream_hits: true
 ```
 
-![Resonance current adaptive profile](docs/images/streamlit_agent_profile.png)
+![Resonance current adaptive profile](assets/streamlit_agent_profile.png)
 
 _The listener profile after four adaptive recommendation cycles._
 
@@ -601,7 +728,7 @@ All recommended songs share the same genre.
 
 These warnings do not automatically alter the recommendation results. Instead, they expose potentially undesirable characteristics for inspection while preserving the recommendation engine's deterministic behavior.
 
-![Resonance recommendation cycle history](docs/images/streamlit_cycle_history.png)
+![Resonance recommendation cycle history](assets/streamlit_cycle_history.png)
 
 _Advanced AI Details showing recommendation-cycle history, adaptation explanations, and quality warnings._
 
@@ -697,6 +824,20 @@ The session tracks recently displayed songs and avoids them when alternatives ar
 ## Structured Logging
 
 Structured logging records useful diagnostic information without mixing debug output with user-facing recommendation output.
+
+## Guardrail Examples
+
+| Input / Condition                                 | System Behavior                             | Result                                                      |
+| ------------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------- |
+| Unknown feedback type                             | `ResonanceAgent` rejects the event          | Invalid feedback cannot influence the listener profile      |
+| Unknown song ID                                   | Agent rejects the event                     | Invalid song references do not enter agent state or history |
+| Only one feedback event                           | Minimum drift threshold prevents adaptation | Listener profile remains unchanged                          |
+| Strong tempo evidence far from the current target | `AgentConfig` clamps the numeric update     | Tempo changes by no more than 5 BPM in one default cycle    |
+| Duplicate artists in the recommendation set       | Quality evaluator raises a warning          | `Duplicate artists appear in the recommendation list.`      |
+| All recommendations share one genre               | Quality evaluator raises a warning          | `All recommended songs share the same genre.`               |
+| All strong session candidates were recently shown | Recent-song protection falls back safely    | A repeat is allowed rather than failing to return a song    |
+
+These mechanisms improve reliability without silently replacing the recommendation engine's decisions.
 
 ---
 
@@ -959,14 +1100,6 @@ Resonance v2.0 is feature-complete for the CodePath AI-110 final project and is 
 - [x] 54-test automated suite
 - [x] Automated-test screenshot
 - [x] CLI verification screenshot
-
-### Remaining Finalization
-
-- [ ] Final Streamlit verification screenshots
-- [ ] Final rubric audit
-- [ ] Presentation
-- [ ] Optional Loom walkthrough
-- [ ] Final release/tag preparation
 
 ---
 

@@ -6,7 +6,7 @@
 [Model Card](model_card.md) •
 [AI Interactions](ai_interactions.md) •
 [Changelog](changelog.md) •
-[Architecture](diagrams/resonance_v2_architecture.mmd) •
+[Architecture](diagrams/resonance_v2_architecture.md) •
 [License](LICENSE)
 
 ---
@@ -212,6 +212,29 @@ Important reliability mechanisms include:
 
 The recommendation engine was deliberately preserved while the agentic system was built around it. This made it possible to verify that new adaptive behavior did not silently change the original scoring weights, ranking behavior, or CLI results.
 
+
+### Observed Runtime Reliability Evidence
+
+A final multi-cycle Streamlit verification session provided runtime evidence in addition to the automated suite.
+
+```text
+target_tempo: 120 → 125
+target_valence: 0.60 → 0.65
+target_danceability: 0.60 → 0.55
+target_decade: 1980 → 1977
+prefers_mainstream_hits: false → true
+```
+
+The same session also surfaced quality warnings when appropriate:
+
+```text
+Duplicate artists appear in the recommendation list.
+All recommended songs share the same genre.
+```
+
+These warnings are diagnostic rather than hidden overrides: the system exposes the condition while preserving the recommendation engine's output.
+
+
 ---
 
 # 7. Required Reflection: Limitations and Biases
@@ -222,7 +245,7 @@ Resonance has several important limitations, and some of them were already visib
 
 ### Catalog Bias
 
-The current catalog is small and hand-curated. This means the recommendation space reflects the music that was selected for the dataset rather than the diversity of music that actually exists.
+The current catalog is a course-scale, hand-curated 210-song dataset. This means the recommendation space reflects the music that was selected for the dataset rather than the diversity of music that actually exists.
 
 Genres, languages, countries, eras, artists, and musical traditions are not represented equally. A user whose taste falls outside the strongest areas of the catalog may receive weaker recommendations regardless of how accurately the profile represents them.
 
@@ -618,7 +641,7 @@ In other words, the listener and Resonance continually **resonate with each othe
 - [`README.md`](README.md) — project overview, setup, architecture, usage, testing, and reproducible execution evidence
 - [`ai_interactions.md`](ai_interactions.md) — AI-assisted development interactions and reasoning traces
 - [`changelog.md`](changelog.md) — development history
-- [`diagrams/resonance_v2_architecture.mmd`](diagrams/resonance_v2_architecture.mmd) — final Mermaid architecture source
+- [`diagrams/resonance_v2_architecture.md`](diagrams/resonance_v2_architecture.md) — final Mermaid architecture source
 - [`docs/model_card_v1.md`](docs/model_card_v1.md) — archived Resonance v1.0 model card
 - [`docs/README_v1.md`](docs/README_v1.md) — archived Resonance v1.0 README
 

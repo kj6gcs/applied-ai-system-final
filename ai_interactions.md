@@ -6,7 +6,7 @@
 [Model Card](model_card.md) •
 [AI Interactions](ai_interactions.md) •
 [Changelog](changelog.md) •
-[Architecture](diagrams/resonance_v2_architecture.mmd) •
+[Architecture](diagrams/resonance_v2_architecture.md) •
 [License](LICENSE)
 
 ---
@@ -810,19 +810,19 @@ This trace demonstrates why the project's AI-assisted workflow required both aut
 
 AI suggestions were not treated as automatically correct.
 
-| Suggestion | Decision | Reason |
-|---|---|---|
-| Preserve the validated scoring engine | **Accepted** | Avoided unnecessary rewrite and protected v1 behavior |
-| Connect `Recommender` to the real functional engine | **Accepted** | Removed disconnected behavior and made tests meaningful |
-| Add regression tests from documented outputs | **Accepted** | Protects known recommendation behavior |
-| Add structured logging | **Accepted** | Supports reliability and future agent diagnostics |
-| Split the project immediately into many small modules | **Rejected / Deferred** | Premature complexity for the size of the project |
-| Add a stateful behavioral agent | **Accepted** | Became the core v2.0 AI feature |
-| Make drift thresholds configurable | **Accepted** | Improved testability without changing defaults |
-| Initial engineering-dashboard-style Streamlit UI | **Implemented, then replaced** | Technically correct but did not match the intended listener experience |
-| Add weighted selection among strong recommendations | **Accepted** | Added variety without replacing ranking logic |
-| Add database-backed persistent accounts now | **Deferred** | Useful future feature, but unnecessary for the course-scale deliverable |
-| Add a live external music API now | **Deferred** | Would reduce reproducibility and expand scope before final documentation/evaluation |
+| Suggestion                                            | Decision                       | Reason                                                                              |
+| ----------------------------------------------------- | ------------------------------ | ----------------------------------------------------------------------------------- |
+| Preserve the validated scoring engine                 | **Accepted**                   | Avoided unnecessary rewrite and protected v1 behavior                               |
+| Connect `Recommender` to the real functional engine   | **Accepted**                   | Removed disconnected behavior and made tests meaningful                             |
+| Add regression tests from documented outputs          | **Accepted**                   | Protects known recommendation behavior                                              |
+| Add structured logging                                | **Accepted**                   | Supports reliability and future agent diagnostics                                   |
+| Split the project immediately into many small modules | **Rejected / Deferred**        | Premature complexity for the size of the project                                    |
+| Add a stateful behavioral agent                       | **Accepted**                   | Became the core v2.0 AI feature                                                     |
+| Make drift thresholds configurable                    | **Accepted**                   | Improved testability without changing defaults                                      |
+| Initial engineering-dashboard-style Streamlit UI      | **Implemented, then replaced** | Technically correct but did not match the intended listener experience              |
+| Add weighted selection among strong recommendations   | **Accepted**                   | Added variety without replacing ranking logic                                       |
+| Add database-backed persistent accounts now           | **Deferred**                   | Useful future feature, but unnecessary for the course-scale deliverable             |
+| Add a live external music API now                     | **Deferred**                   | Would reduce reproducibility and expand scope before final documentation/evaluation |
 
 This process reinforced an important lesson:
 
@@ -949,7 +949,211 @@ tests/test_app.py
 
 The Mermaid source for the final architecture is located at:
 
-[`diagrams/resonance_v2_architecture.mmd`](diagrams/resonance_v2_architecture.mmd)
+[`diagrams/resonance_v2_architecture.md`](diagrams/resonance_v2_architecture.md)
+
+## Runtime Agent Trace — Final Streamlit Verification, Cycle #2
+
+The following trace records **observable application state and outputs** from the final multi-cycle Streamlit verification. It is not hidden chain-of-thought; it is a structured record of inputs, thresholds, state changes, warnings, and stored outputs produced by the running system.
+
+```text
+OBSERVE
+3 liked/replayed songs accumulated in the current recommendation cycle.
+
+EVIDENCE
+average tempo_bpm: 125.0
+average valence: 0.67
+average danceability: 0.48
+average release decade: 1976.67
+3/3 liked/replayed songs matched prefers_mainstream_hits = true
+
+REASON
+The numeric drift threshold was met.
+The categorical shift threshold was met for prefers_mainstream_hits.
+
+ADAPT
+target_tempo: 120 → 125
+target_valence: 0.60 → 0.65
+target_danceability: 0.60 → 0.55
+target_decade: 1980 → 1977
+prefers_mainstream_hits: false → true
+
+RECOMMEND
+The updated UserProfile was passed to the existing deterministic
+recommendation engine to generate the next ranked recommendation set.
+
+EVALUATE
+Quality warning:
+All recommended songs share the same genre.
+
+EXPLAIN
+The agent stored a change explanation describing the evidence
+behind each updated preference.
+
+REMEMBER
+The completed RecommendationCycle was appended to agent history,
+including profile-before/profile-after snapshots, applied feedback,
+recommendations, quality warnings, and the adaptation explanation.
+```
+
+This runtime trace demonstrates the implemented loop:
+
+```text
+Observe → Reason → Adapt → Recommend → Evaluate → Explain → Remember
+```
+
+It also demonstrates that the agent does not replace the recommendation engine: the agent updates listener state and orchestrates the next cycle, while the recommender remains responsible for scoring and ranking songs.
+
+---
+
+## Test Harness / Evaluation Script
+
+### What task did you give the AI agent?
+
+After completing the main Resonance v2.0 implementation and reviewing the final project rubric, I identified the optional **Test Harness or Evaluation Script** stretch feature as a useful extension that could improve system-level verification without changing the recommendation or adaptive-agent logic.
+
+I asked the AI agent to create a root-level `evaluation.py` script that would:
+
+- exercise the existing system through its real public APIs;
+- use the real 210-song catalog;
+- evaluate multiple predefined scenarios;
+- avoid duplicating recommendation scoring or agent adaptation logic;
+- print individual PASS / FAIL results;
+- print an overall evaluation summary; and
+- return exit code `0` only when every evaluation passes.
+
+The evaluation harness was intentionally kept separate from pytest. The existing automated suite verifies individual components and integration behavior, while `evaluation.py` acts as a lightweight system-level acceptance harness.
+
+### What did the AI agent generate?
+
+The AI agent inspected the existing implementation in:
+
+- `src/recommender.py`
+- `src/agent.py`
+- `src/song_selection.py`
+- the existing test files
+- `data/songs.csv`
+
+It then created `evaluation.py` with five predefined evaluation scenarios:
+
+1. **Static rock profile**
+   Confirms that the known rock/intense profile returns five recommendations and that **Back In Black — AC/DC** remains the top result.
+
+2. **Conflicting preference fallback**
+   Uses intentionally conflicting metal, peaceful, high-tempo, high-valence, high-danceability, and acoustic preferences and confirms that the recommender still returns five ranked partial matches instead of failing.
+
+3. **Bounded preference drift**
+   Starts with `target_tempo=100`, provides positive feedback on the three highest-tempo songs in the real catalog, runs an adaptive cycle, and confirms that the agent increases the target tempo without exceeding the configured `AgentConfig.max_tempo_step` of 5 BPM.
+
+4. **Invalid feedback rejection**
+   Submits the unsupported feedback type `"love"` and confirms that the existing agent validation rejects it with a `ValueError`.
+
+5. **Recommendation quality warning**
+   Uses real AC/DC catalog entries to create a recommendation set dominated by one artist and confirms that the agent's existing quality-evaluation behavior produces an appropriate warning.
+
+The harness does not reimplement scoring, profile drift, validation, or quality-check logic. It calls the existing `Recommender`, `ResonanceAgent`, `AgentConfig`, `UserProfile`, `Song`, and `load_songs()` implementation.
+
+### What did you verify or fix manually?
+
+I manually ran the generated evaluation harness from the project CLI rather than relying only on the AI agent's reported test results.
+
+The first manual run failed immediately with:
+
+```text
+NameError: name 'EvalResult' is not defined
+```
+
+Inspection showed that an AI-assisted edit had accidentally replaced the intended `load_catalog()` helper with a duplicate `eval_static_rock_profile()` definition before the `EvalResult` class was declared. This also meant that `main()` would eventually have attempted to call a missing `load_catalog()` function.
+
+I corrected the file structure so that:
+
+```text
+imports
+↓
+CATALOG_PATH
+↓
+load_catalog()
+↓
+make_profile()
+↓
+EvalResult
+↓
+evaluation functions
+↓
+main()
+```
+
+After the correction, I manually reran:
+
+```bash
+python evaluation.py
+```
+
+The final verified output was:
+
+```text
+[PASS] Static rock profile
+       Top result: Back In Black — AC/DC
+[PASS] Conflicting preference fallback
+       Returned 5 recommendations
+[PASS] Bounded preference drift
+       target_tempo drifted 100 -> 105.0 (max step 5.0)
+[PASS] Invalid feedback rejection
+       Rejected as expected: Unknown feedback event_type: 'love'
+[PASS] Recommendation quality warning
+       Duplicate artists appear in the recommendation list.
+
+Resonance Evaluation Summary
+============================
+Passed: 5
+Failed: 0
+Total:  5
+
+Overall result: PASS
+```
+
+I then checked the process exit code:
+
+```bash
+echo $?
+```
+
+which returned:
+
+```text
+0
+```
+
+This confirmed that the harness itself reported successful completion rather than merely printing a PASS message.
+
+The existing pytest suite was also verified independently and remained at **54 passing tests**, confirming that adding the evaluation harness did not require changing existing recommendation or agent behavior.
+
+### What did this AI interaction demonstrate?
+
+This addition provided another example of why AI-generated code should be treated as a development aid rather than assumed to be correct.
+
+The AI agent made a useful architectural suggestion: create a small system-level evaluation harness that reused the real application APIs instead of duplicating implementation logic. That produced a meaningful additional reliability mechanism and directly supported the optional evaluation-script stretch feature.
+
+However, the version present in the working tree contained a Python definition/structure error that prevented it from running. Manual execution exposed the problem immediately, and reviewing the actual source made the correction straightforward.
+
+The final workflow therefore followed the same human-in-the-loop approach used throughout Resonance v2.0:
+
+```text
+AI proposes / implements
+        ↓
+Human reviews
+        ↓
+Run real system
+        ↓
+Identify discrepancy
+        ↓
+Correct implementation
+        ↓
+Run again
+        ↓
+Verify observable result
+```
+
+The final `evaluation.py` is therefore not included merely because an AI agent reported that it worked; it is included because its behavior was independently reproduced and verified from the project CLI.
 
 ---
 
@@ -977,14 +1181,14 @@ In addition to automated tests, the CLI and Streamlit application were run direc
 
 Important verification milestones included:
 
-| Milestone | Result |
-|---|---:|
-| Agent implementation | 34 tests passing |
-| `AgentConfig` refinement | 38 tests passing |
+| Milestone                     |           Result |
+| ----------------------------- | ---------------: |
+| Agent implementation          | 34 tests passing |
+| `AgentConfig` refinement      | 38 tests passing |
 | Initial Streamlit integration | 40 tests passing |
-| Listener UX + song selection | 54 tests passing |
+| Listener UX + song selection  | 54 tests passing |
 
-The final README will contain reproducible execution evidence captured from the completed system rather than illustrative or invented sample output.
+The final README contains reproducible execution evidence captured from the completed system rather than illustrative or invented sample output.
 
 ---
 

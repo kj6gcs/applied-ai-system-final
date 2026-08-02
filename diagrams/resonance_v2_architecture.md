@@ -83,6 +83,7 @@ flowchart TD
     PH -->|"History / transparency"| UI
 
     subgraph TESTING["Reliability & Evaluation"]
+        EVAL["evaluation.py<br/>5 predefined system-level scenarios<br/>PASS / FAIL summary + exit code"]
         TREC["tests/test_recommender.py<br/>scoring, ranking, regression"]
         TAGENT["tests/test_agent.py<br/>feedback, drift, config, history"]
         TSEL["tests/test_song_selection.py<br/>weighted selection, repeat avoidance"]
@@ -90,6 +91,8 @@ flowchart TD
         LOG["Structured Logging<br/>src/logging_config.py"]
     end
 
+    EVAL -. "evaluates" .-> REC
+    EVAL -. "evaluates" .-> RA
     TREC -. "verifies" .-> REC
     TAGENT -. "verifies" .-> RA
     TSEL -. "verifies" .-> SEL
@@ -101,6 +104,38 @@ flowchart TD
     RA -. "implements" .-> CYCLE
 ```
 
+## Input → Processing → Output Data Flow
+
+```text
+INPUT
+Listener profile + Like / Skip / Replay feedback
+        ↓
+PROCESSING
+Streamlit session state
+        ↓
+ResonanceAgent validation and evidence accumulation
+        ↓
+Bounded preference drift using AgentConfig
+        ↓
+Deterministic recommendation scoring and ranking
+        ↓
+Artist-diversity adjustment
+        ↓
+Weighted session song selection + recent-song avoidance
+        ↓
+Quality checks + two explanation layers
+        ↓
+OUTPUT
+Next listener-facing recommendation
+Updated listener profile
+Recommendation-cycle history
+Quality warnings / explanations
+```
+
+This flow matches the implemented project: `app.py` manages the interactive session, `src/agent.py` owns adaptation and history, `src/recommender.py` owns scoring/ranking, and `src/song_selection.py` chooses among already-ranked candidates for the listener-facing session.
+
+---
+
 ## Architecture Overview
 
 Resonance v2.0 separates the listener-facing experience from the adaptive agent and the deterministic recommendation engine.
@@ -109,11 +144,45 @@ The **Streamlit interface** manages the interactive session. It allows a listene
 
 The **ResonanceAgent** is the stateful AI layer. It validates feedback, accumulates evidence, evaluates whether preference drift is justified, applies bounded profile changes, requests new recommendations, performs lightweight quality checks, explains adaptation, and stores recommendation-cycle history.
 
-The **recommendation engine** remains deterministic. It scores and ranks songs using explicit features such as genre, mood, tempo, valence, danceability, acousticness, decade, mood tags, and popularity preference. Existing artist-diversity behavior remains part of the ranking logic.
+The **recommendation engine** remains deterministic and currently evaluates the local 210-song catalog. It scores and ranks songs using explicit features such as genre, mood, tempo, valence, danceability, acousticness, decade, mood tags, and popularity preference. Existing artist-diversity behavior remains part of the ranking logic.
 
 The **song-selection layer** introduces controlled variety after ranking. It selects from strong candidates using weighted randomness while avoiding recently shown tracks when possible. It does not calculate recommendation scores or replace the recommendation engine.
 
-The **reliability layer** includes automated tests for scoring/ranking, agent behavior, candidate selection, and Streamlit interaction, plus structured logging for diagnostics.
+The **reliability and evaluation layer** contains both automated component/integration tests and a separate system-level acceptance harness. The four pytest modules verify recommendation behavior, agent behavior, candidate selection, and Streamlit interaction. `evaluation.py` independently executes five predefined end-to-end scenarios against the real recommender, agent, and catalog, prints individual PASS / FAIL results, prints an overall summary, and returns a nonzero exit code if any evaluation fails. Structured logging provides runtime diagnostics without changing recommendation or agent behavior.
+
+---
+
+## System-Level Evaluation Harness
+
+The evaluation harness complements pytest by exercising the completed system through predefined acceptance scenarios rather than individual unit/integration assertions.
+
+Run:
+
+```bash
+python evaluation.py
+```
+
+The harness currently evaluates:
+
+1. the static rock recommendation baseline;
+2. graceful fallback for conflicting preferences;
+3. bounded preference drift;
+4. invalid feedback rejection; and
+5. recommendation-quality warning detection.
+
+Its final summary has the form:
+
+```text
+Resonance Evaluation Summary
+============================
+Passed: 5
+Failed: 0
+Total:  5
+
+Overall result: PASS
+```
+
+The harness exits with code `0` only when every scenario passes and code `1` if one or more evaluations fail.
 
 ---
 
