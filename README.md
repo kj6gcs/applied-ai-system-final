@@ -1,4 +1,6 @@
-# Resonance
+<p align="center">
+  <img src="assets/resonance_v2_cropped.svg" alt="Resonance v2.0 Logo" width="600">
+</p>
 
 > **An Adaptive, Explainable Music Recommendation Agent**
 
@@ -1265,6 +1267,7 @@ Throughout development, I used generative AI as both a development tool and a le
 ---
 
 ## Navigation
+
 - [`README.md`](README.md) — project overview, setup, architecture, usage, testing, and reproducible execution evidence
 - [`ai_interactions.md`](ai_interactions.md) — AI-assisted development interactions and reasoning traces
 - [`changelog.md`](changelog.md) — development history
