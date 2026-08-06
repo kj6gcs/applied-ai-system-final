@@ -24,6 +24,7 @@ from src.song_selection import choose_next_song
 CATALOG_PATH = "data/songs.csv"
 CANDIDATE_POOL_SIZE = 10
 RECENT_SONGS_REMEMBERED = 10
+LOGO_PATH ="assets/resonance_v2_cropped.svg"
 
 # Mirrors AgentConfig's own default (min_feedback_for_drift=3). This only
 # decides *when the UI calls* run_cycle() -- whether drift actually applies
@@ -148,9 +149,15 @@ def _record_feedback(event_type: str) -> None:
 
     _advance_song()
 
+def render_resonance_header() -> None:
+    """Displays the Resonance v2.0 branding at the top of the app."""
+    left, center, right = st.columns([1, 4, 1])
+
+    with center:
+        st.image(LOGO_PATH, use_container_width=True)
 
 def render_setup() -> None:
-    st.title("\U0001F3A7 Resonance")
+    render_resonance_header()
     st.subheader("Let's set up your listener profile")
 
     st.write("Quick start:")
@@ -211,7 +218,7 @@ def render_listening_session() -> None:
     profile = agent.get_profile()
     cycle_number = agent.get_history()[-1].cycle_index
 
-    st.title("\U0001F3A7 Resonance")
+    render_resonance_header()
 
     score = recommender.score(profile, song)
     technical_explanation = recommender.explain_recommendation(profile, song)
